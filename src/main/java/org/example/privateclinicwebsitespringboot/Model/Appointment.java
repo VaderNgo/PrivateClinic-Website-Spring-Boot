@@ -2,8 +2,10 @@ package org.example.privateclinicwebsitespringboot.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -18,6 +20,9 @@ public class Appointment {
     private String note;
 
     private String status = "pending";
+
+    @CreatedDate
+    private Date createdAt = new Date();
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "patient_id",nullable = true)

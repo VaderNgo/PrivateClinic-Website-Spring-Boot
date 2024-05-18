@@ -2,6 +2,9 @@ package org.example.privateclinicwebsitespringboot.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.util.Date;
 
 @Data
 @Entity
@@ -18,6 +21,9 @@ public class MyUser {
     private String password;
     private String email;
     private String role;
+
+    @CreatedDate
+    private Date createdAt = new Date();
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "patient_id",nullable = true)

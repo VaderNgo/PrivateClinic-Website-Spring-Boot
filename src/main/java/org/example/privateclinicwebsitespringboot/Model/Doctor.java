@@ -2,6 +2,7 @@ package org.example.privateclinicwebsitespringboot.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 
@@ -18,6 +19,8 @@ public class Doctor {
     private Date birth;
     private String address;
 
+    @CreatedDate
+    private Date createdAt = new Date();
     public Doctor(){}
 
     public Long getId() {
