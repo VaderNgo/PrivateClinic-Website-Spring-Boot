@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<body>
+<div class="sidebar" id="sidebar" th:fragment="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu" sec:authorize="hasAuthority('USER')">
+            <ul>
+                <li class="menu-title">Main</li>
+                <li class="active">
+                    <a href="index-2.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="/user-appoinments"><i class="fa fa-user-md"></i> <span>Appointment</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

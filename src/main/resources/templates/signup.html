@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Private Clinic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script
+            src="https://kit.fontawesome.com/64d58efce2.js"
+            crossorigin="anonymous"
+    ></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/static/css/signin.css}">
+</head>
+<body>
+
+<div class="container sign-up-mode">
+    <div class="forms-container">
+        <div class="signin-signup">
+            <form action="#" method="POST" class="sign-in-form">
+                <h2 class="title">Sign in</h2>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Username"/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Password"/>
+                </div>
+                <input type="submit" value="Login" class="btn solid"/>
+
+            </form>
+            <form action="#" th:action="@{/signup/process}" th:object="${signUpDTO}" method="post" class="sign-up-form">
+                <h2 class="title">Sign up</h2>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" th:field="*{username}" placeholder="Username" required/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" th:field="*{fullName}" placeholder="FullName" required/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-address-book"></i>
+                    <input type="text" th:field="*{address}" placeholder="Address" required/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-calendar"></i>
+                    <input type="date" th:field="*{birth}" placeholder="Birth" required/>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" th:field="*{email}" placeholder="Email" required />
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" th:field="*{password}" placeholder="Password" required/>
+                </div>
+                <input type="submit" class="btn" value="Sign up"/>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="panels-container">
+        <div class="panel left-panel">
+            <div class="content">
+                <h3>New here ?</h3>
+                <p>
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
+                    ex ratione. Aliquid!
+                </p>
+                <button class="btn transparent" id="sign-up-btn">
+                    Sign up
+                </button>
+            </div>
+            <img src="img/log.svg" class="image" alt=""/>
+        </div>
+        <div class="panel right-panel">
+            <div class="content">
+                <h3>One of us ?</h3>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+                    laboriosam ad deleniti.
+                </p>
+                <button class="btn transparent" id="sign-in-btn">
+                    Sign in
+                </button>
+            </div>
+            <img src="img/register.svg" class="image" alt=""/>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JS -->
+<script th:src="@{/static/js/signup.js}"></script>
+</body>
+</html>
