@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -23,7 +23,7 @@ public class MyUser {
     private String role;
 
     @CreatedDate
-    private Date createdAt = new Date();
+    private LocalDate createdAt = LocalDate.now();
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "patient_id",nullable = true)

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class Bill {
     private Float totalMoney = 0.0f;
 
     @CreatedDate
-    private Date createdAt = new Date();
+    private LocalDate createdAt = LocalDate.now();
 
     public Bill(){
 
@@ -91,11 +92,11 @@ public class Bill {
         this.totalMoney = totalMoney;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 }

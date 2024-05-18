@@ -3,7 +3,9 @@ package org.example.privateclinicwebsitespringboot.Model;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -15,6 +17,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime date;
 
     private String note;
@@ -22,7 +25,7 @@ public class Appointment {
     private String status = "pending";
 
     @CreatedDate
-    private Date createdAt = new Date();
+    private LocalDate createdAt = LocalDate.now();
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "patient_id",nullable = true)

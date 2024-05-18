@@ -44,6 +44,15 @@ public class MyUserService implements UserDetailsService {
         return myUserRepository.findByEmail(email);
     }
 
+    public MyUser loadMyUserByUsername(String username){
+        Optional<MyUser> user = myUserRepository.findByUsername(username);
+        if(user.isPresent()){
+            return user.get();
+        }else{
+            throw new UsernameNotFoundException(username);
+        }
+    }
+
     public MyUser signUpPatient(SignUpDTO signUpDTO, PasswordEncoder passwordEncoder, Patient patient){
         MyUser myUser = new MyUser();
         myUser.setUsername(signUpDTO.getUsername());

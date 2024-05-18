@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -18,7 +19,7 @@ public class Patient {
     private Date birth;
     private String address;
     @CreatedDate
-    private Date createdAt = new Date();
+    private LocalDate createdAt = LocalDate.now();
     public Patient(){}
 
     public Long getId() {
