@@ -14,10 +14,9 @@
 </head>
 <body>
     <div class="main-wrapper">
-        <div sec:authorize="hasAuthority('USER')">
-            <div th:if="${header}" th:replace="${header}"></div>
-            <div th:if="${sidebar}" th:replace="${sidebar}"></div>
-
+        <div sec:authorize="isAuthenticated()">
+            <div th:if="${header}" th:replace="${header} :: header(${user})"></div>
+            <div th:if="${sidebar}" th:replace="${sidebar} :: sidebar(${user})"></div>
         </div>
     </div>
 

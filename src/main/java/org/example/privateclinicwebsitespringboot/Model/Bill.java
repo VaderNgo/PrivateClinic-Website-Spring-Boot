@@ -20,12 +20,12 @@ public class Bill {
     @JoinColumn(name = "appoinment_id",nullable = true)
     private Appointment appoinment;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = true)
-    @JoinColumn(name = "patient_id",nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = true)
     private Patient patient;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = true)
-    @JoinColumn(name = "doctor_id",nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = true)
     private Doctor doctor;
 
     @OneToMany(mappedBy="bill")

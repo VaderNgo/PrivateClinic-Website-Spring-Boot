@@ -29,6 +29,14 @@ public class AuthController {
     @Autowired
     private PatientService patientService;
 
+    @GetMapping("/index")
+    public ModelAndView homePage(){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("index");
+        mav.addObject("content","sidebar");
+        return mav;
+    }
+
     @GetMapping("/signin")
     public ModelAndView signInPage(){
         ModelAndView mav = new ModelAndView();

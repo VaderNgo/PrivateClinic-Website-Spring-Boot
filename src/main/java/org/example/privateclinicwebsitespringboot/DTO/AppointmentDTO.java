@@ -1,49 +1,27 @@
-package org.example.privateclinicwebsitespringboot.Model;
+package org.example.privateclinicwebsitespringboot.DTO;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.example.privateclinicwebsitespringboot.Model.Doctor;
+import org.example.privateclinicwebsitespringboot.Model.Patient;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Data
-@Entity
-@Table(name = "Appointments")
-public class Appointment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+public class AppointmentDTO {
+    private Long Id;
     private LocalDateTime date;
-
     private String note;
-
-    private String status = "Pending";
-
-    @CreatedDate
-    private LocalDate createdAt = LocalDate.now();
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = true)
+    private String status;
     private Patient patient;
-
-    @ManyToOne
-    @JoinColumn(name = "doctor_id",nullable = true)
     private Doctor doctor;
 
-    public Appointment() {
+    public AppointmentDTO() {
     }
 
     public Long getId() {
-        return id;
+        return Id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        Id = id;
     }
 
     public LocalDateTime getDate() {

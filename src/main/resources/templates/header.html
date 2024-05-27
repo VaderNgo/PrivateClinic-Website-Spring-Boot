@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <body>
-<div class="header" th:fragment="header">
+<div class="header" th:fragment="header(user)">
     <div class="header-left">
         <a href="/dashboard" class="logo">
             <img th:src="@{/static/assets/img/logo.png}" width="35" height="35" alt=""> <span>Preclinic</span>
@@ -14,7 +14,7 @@
             <a class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                         <span class="user-img"><img class="rounded-circle" th:src="@{/static/assets/img/user.jpg}" width="40" alt="Admin">
 							<span class="status online"></span></span>
-                <span th:text="${#authentication.getName()}"></span>
+                <span th:text="${user.username}"></span>
             </a>
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="profile.html">My Profile</a>

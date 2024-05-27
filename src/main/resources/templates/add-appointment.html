@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<body>
+<div class="page-wrapper">
+    <div class="content">
+        <div class="card mx-auto mt-5 shadow" style="height: fit-content;">
+            <div class="card-header text-center">
+                <h4 class="card-title">Add Appointment</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/user/appointment/add}" th:object="${appointmentDTO}" method="POST">
+                    <div class="row mb-3">
+                        <label for="date" class="col-sm-3 col-form-label">Date</label>
+                        <div class="col-sm-9">
+                            <input type="datetime-local" class="form-control" id="date" th:field="*{date}">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="note" class="col-sm-3 col-form-label">Note</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="note" th:field="*{note}">
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary submit-btn">Create Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
