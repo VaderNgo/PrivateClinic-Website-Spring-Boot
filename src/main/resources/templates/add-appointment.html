@@ -29,6 +29,20 @@
         .table .table-bordered > tbody > tr > th {
             border: 1px solid black;
         }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .card-body.slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
     </style>
 </head>
 <body>
@@ -42,18 +56,18 @@
                     <div class="card-header text-center">
                         <h4 class="card-title">Add Appointment</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body slide-in">
                         <form th:action="@{/user/appointment/add}" th:object="${appointmentDTO}" method="POST">
                             <div class="row mb-3">
                                 <label for="date" class="col-sm-3 col-form-label">Date</label>
                                 <div class="col-sm-9">
-                                    <input type="datetime-local" class="form-control" id="date" th:field="*{date}">
+                                    <input type="datetime-local" class="form-control" id="date" th:field="*{date}" required>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label for="note" class="col-sm-3 col-form-label">Note</label>
                                 <div class="col-sm-9">
-                                    <textarea class="form-control" id="note" th:field="*{note}" rows="4"></textarea>
+                                    <textarea class="form-control" id="note" th:field="*{note}" rows="4" required></textarea>
                                 </div>
                             </div>
                             <div class="text-center">
@@ -157,6 +171,12 @@
         var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
         modal.show();
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var cardBody = document.querySelector('.card-body');
+        cardBody.classList.add('slide-in');
+    });
 </script>
 </body>
 </html>
