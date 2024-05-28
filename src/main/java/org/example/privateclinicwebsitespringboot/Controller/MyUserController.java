@@ -32,6 +32,7 @@ public class MyUserController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
             mav.addObject("user",myUser);
+            mav.addObject("active","dashboard");
             mav.setViewName("dashboard");
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
@@ -50,10 +51,10 @@ public class MyUserController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
             mav.addObject("user",myUser);
+            mav.addObject("active","appointment");
             mav.setViewName("add-appointment");
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
-            mav.addObject("content","add-appointment.html");
             mav.addObject("appointmentDTO",new AppointmentDTO());
         }catch (Exception e){
             System.out.println(e);
@@ -68,9 +69,9 @@ public class MyUserController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
             mav.addObject("user",myUser);
+            mav.addObject("active","appointment");
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
-            mav.addObject("content","content.html");
 
             mav.addObject("appointmentDTO",appointmentDTO);
 

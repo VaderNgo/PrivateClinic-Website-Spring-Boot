@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <body>
-<div class="sidebar" id="sidebar" th:fragment="sidebar(user)">
+<div class="sidebar" id="sidebar" th:fragment="sidebar(active,user)">
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu" th:switch="${user.role}">
             <ul th:case="'USER'">
-                <li class="active">
+                <li class="menu-title">Main</li>
+                <li th:class="${active == 'dashboard'} ? 'active' : ''">
                     <a href="/user/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                 </li>
-                <li>
+                <li th:class="${active == 'appointment'} ? 'active' : ''">
                     <a href="/user/appointment"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
                 </li>
             </ul>
         </div>
     </div>
 </div>
+<div class="sidebar-overlay" data-reff=""></div>
+<script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/static/js/popper.min.js}"></script>
+<script th:src="@{/static/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/js/jquery.slimscroll.js}"></script>
+<script th:src="@{/static/js/select2.min.js}"></script>
+<script th:src="@{/static/js/moment.min.js}"></script>
+<script th:src="@{/static/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/static/js/app.js}"></script>
 </body>
 </html>
