@@ -1,5 +1,6 @@
 package org.example.privateclinicwebsitespringboot.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.privateclinicwebsitespringboot.DTO.AppointmentDTO;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -45,7 +48,7 @@ public class MyUserController {
     }
 
     @GetMapping("/appointment")
-    public ModelAndView appointment(){
+    public ModelAndView appointment(@ModelAttribute Appointment appointment,HttpSession session){
         ModelAndView mav = new ModelAndView();
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -56,6 +59,9 @@ public class MyUserController {
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
             mav.addObject("appointmentDTO",new AppointmentDTO());
+            mav.addObject("appointment",appointment);
+            List<Appointment> myAppointments = appointmentService.getMyAppointments(myUser);
+            session.setAttribute("myAppointments",myAppointments);
         }catch (Exception e){
             System.out.println(e);
         }

@@ -7,6 +7,8 @@ import org.example.privateclinicwebsitespringboot.Repository.AppointmentReposito
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AppointmentService {
     @Autowired
@@ -21,6 +23,10 @@ public class AppointmentService {
         appointment.setDoctor(null);
         appointmentRepository.save(appointment);
         return appointment;
+    }
+
+    public List<Appointment> getMyAppointments(MyUser myUser){
+        return appointmentRepository.findMyAppointments(myUser.getPatient().getId());
     }
 
     

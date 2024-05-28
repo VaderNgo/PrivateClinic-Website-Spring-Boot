@@ -3,14 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script
-            src="https://kit.fontawesome.com/64d58efce2.js"
-            crossorigin="anonymous"
-    ></script>
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/static/css/font_awesome.min.css}">
     <link rel="stylesheet" th:href="@{/static/css/custom.css}">
+    <style>
+        .table-responsive {
+            max-height: 200px; /* Adjust height as needed */
+            overflow-y: auto;
+        }
+        .table td, .table th {
+            max-width: 150px; /* Adjust width as needed */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        textarea {
+            width: 100%;
+            resize: none;
+        }
+        .table-bordered > thead > tr > th {
+            border: 1px solid black;
+        }
+        .table .table-bordered > tbody > tr > th {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
 <div class="main-wrapper">
@@ -34,19 +53,90 @@
                             <div class="row mb-3">
                                 <label for="note" class="col-sm-3 col-form-label">Note</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="note" th:field="*{note}">
+                                    <textarea class="form-control" id="note" th:field="*{note}" rows="4"></textarea>
                                 </div>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary submit-btn">Create Appointment</button>
                             </div>
                         </form>
+
+                        <h5 class="mt-5">Existing Appointments</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="text-white" style="background-color: #1aaaff">
+                                <tr >
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Note</th>
+                                    <th>Status</th>
+                                    <th>Created At</th>
+                                </tr>
+                                </thead>
+                                <tbody th:each="appointment, iterStat : ${session.myAppointments}">
+                                <tr th:class="${appointment.status == 'Pending' ? 'table-warning' : (appointment.status == 'Denied' ? 'table-danger' : 'table-success')}"
+                                    th:data-id="${appointment.id}"
+                                    th:data-date="${appointment.date}"
+                                    th:data-note="${appointment.note}"
+                                    th:data-status="${appointment.status}"
+                                    th:data-createdat="${appointment.createdAt}"
+                                    onclick="openModal(this)">
+                                    <td th:text="${appointment.id}"></td>
+                                    <td th:text="${appointment.date}"></td>
+                                    <td th:text="${appointment.note}"></td>
+                                    <td th:text="${appointment.status}"></td>
+                                    <td th:text="${appointment.createdAt}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appointmentModalLabel">Appointment Details</h5>
+                <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="modalId" class="form-label">ID</label>
+                        <input type="text" class="form-control" id="modalId" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalDate" class="form-label">Date</label>
+                        <input type="text" class="form-control" id="modalDate" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalNote" class="form-label">Note</label>
+                        <textarea class="form-control" id="modalNote" rows="5" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalStatus" class="form-label">Status</label>
+                        <input type="text" class="form-control" id="modalStatus" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalCreatedAt" class="form-label">Created At</label>
+                        <input type="text" class="form-control" id="modalCreatedAt" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="sidebar-overlay" data-reff=""></div>
 <script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
 <script th:src="@{/static/js/popper.min.js}"></script>
@@ -56,5 +146,17 @@
 <script th:src="@{/static/js/moment.min.js}"></script>
 <script th:src="@{/static/js/bootstrap-datetimepicker.min.js}"></script>
 <script th:src="@{/static/js/app.js}"></script>
+<script>
+    function openModal(row) {
+        document.getElementById('modalId').value = row.getAttribute('data-id');
+        document.getElementById('modalDate').value = row.getAttribute('data-date');
+        document.getElementById('modalNote').value = row.getAttribute('data-note');
+        document.getElementById('modalStatus').value = row.getAttribute('data-status');
+        document.getElementById('modalCreatedAt').value = row.getAttribute('data-createdat');
+
+        var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+        modal.show();
+    }
+</script>
 </body>
 </html>
