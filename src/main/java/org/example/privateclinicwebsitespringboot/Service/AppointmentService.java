@@ -7,7 +7,10 @@ import org.example.privateclinicwebsitespringboot.Repository.AppointmentReposito
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppointmentService {
@@ -29,5 +32,14 @@ public class AppointmentService {
         return appointmentRepository.findMyAppointments(myUser.getPatient().getId());
     }
 
+    public boolean isDateNotPicked(AppointmentDTO appointmentDTO){
+        List<Appointment> appointments = appointmentRepository.findAppointmentsNotDenied();
+        for(Appointment appointment:appointments){
+            if(appointment.getDate().equals(appointmentDTO.getDate())){
+                return false;
+            }
+        }
+        return true;
+    }
     
 }

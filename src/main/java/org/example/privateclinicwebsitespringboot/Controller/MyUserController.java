@@ -2,6 +2,7 @@ package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.privateclinicwebsitespringboot.DTO.AppointmentDTO;
+import org.example.privateclinicwebsitespringboot.Handler.MessageHandler;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
 import org.example.privateclinicwebsitespringboot.Service.AppointmentService;
@@ -69,8 +70,9 @@ public class MyUserController {
     }
 
     @PostMapping("/appointment/add")
-    public ModelAndView addAppointment(@ModelAttribute("appointmentDTO") AppointmentDTO appointmentDTO){
+    public ModelAndView addAppointment(@ModelAttribute("appointmentDTO") AppointmentDTO appointmentDTO, HttpSession session){
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -80,13 +82,21 @@ public class MyUserController {
             mav.addObject("sidebar","sidebar.html");
 
             mav.addObject("appointmentDTO",appointmentDTO);
-
+            if(!appointmentService.isDateNotPicked(appointmentDTO)){
+                messageHandler = new MessageHandler("danger","This date already picked!");
+                session.setAttribute("message",messageHandler);
+                mav.setViewName("redirect:/user/appointment");
+                return mav;
+            }
             Appointment appointment = appointmentService.createAppointment(appointmentDTO,myUser);
-            mav.setViewName("redirect:/user/appointment");
+            messageHandler = new MessageHandler("success","Appointment added successfully");
 
         }catch (Exception e){
             System.out.println(e);
+            messageHandler = new MessageHandler("danger","Failed to add appointment");
         }
+        session.setAttribute("message",messageHandler);
+        mav.setViewName("redirect:/user/appointment");
         return mav;
     }
 }
