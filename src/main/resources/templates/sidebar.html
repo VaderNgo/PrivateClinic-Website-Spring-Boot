@@ -9,8 +9,20 @@
                 <li th:class="${active == 'dashboard'} ? 'active' : ''">
                     <a href="/user/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                 </li>
-                <li th:class="${active == 'appointment'} ? 'active' : ''">
-                    <a href="/user/appointment"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                <li th:class="${active == 'appointments'} ? 'active' : ''">
+                    <a href="/user/appointments"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                </li>
+            </ul>
+            <ul th:case="'ADMIN'">
+                <li class="menu-title">Main</li>
+                <li th:class="${active == 'dashboard'} ? 'active' : ''">
+                    <a href="/admin/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                </li>
+                <li th:class="${active == 'appointments'} ? 'active' : ''">
+                    <a href="/admin/appointments"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                </li>
+                <li th:class="${active == 'doctors'} ? 'active' : ''">
+                    <a href="/admin/doctors"><i class="fa "></i> <span>Appointments</span></a>
                 </li>
             </ul>
         </div>

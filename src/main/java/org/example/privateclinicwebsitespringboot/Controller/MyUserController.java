@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,15 +46,15 @@ public class MyUserController {
         return mav;
     }
 
-    @GetMapping("/appointment")
+    @GetMapping("/appointments")
     public ModelAndView appointment(@ModelAttribute Appointment appointment,HttpSession session){
         ModelAndView mav = new ModelAndView();
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
             mav.addObject("user",myUser);
-            mav.addObject("active","appointment");
-            mav.setViewName("add-appointment");
+            mav.addObject("active","appointments");
+            mav.setViewName("user-appointment");
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
             mav.addObject("appointmentDTO",new AppointmentDTO());
@@ -69,7 +67,7 @@ public class MyUserController {
         return mav;
     }
 
-    @PostMapping("/appointment/add")
+    @PostMapping("/appointments/add")
     public ModelAndView addAppointment(@ModelAttribute("appointmentDTO") AppointmentDTO appointmentDTO, HttpSession session){
         ModelAndView mav = new ModelAndView();
         MessageHandler messageHandler = null;
@@ -85,7 +83,7 @@ public class MyUserController {
             if(!appointmentService.isDateNotPicked(appointmentDTO)){
                 messageHandler = new MessageHandler("danger","This date already picked!");
                 session.setAttribute("message",messageHandler);
-                mav.setViewName("redirect:/user/appointment");
+                mav.setViewName("redirect:/user/appointments");
                 return mav;
             }
             Appointment appointment = appointmentService.createAppointment(appointmentDTO,myUser);
@@ -96,7 +94,7 @@ public class MyUserController {
             messageHandler = new MessageHandler("danger","Failed to add appointment");
         }
         session.setAttribute("message",messageHandler);
-        mav.setViewName("redirect:/user/appointment");
+        mav.setViewName("redirect:/user/appointments");
         return mav;
     }
 }
