@@ -2,6 +2,7 @@ package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.privateclinicwebsitespringboot.DTO.AppointmentDTO;
+import org.example.privateclinicwebsitespringboot.DTO.DisplayAppointmentDTO;
 import org.example.privateclinicwebsitespringboot.DTO.DoctorAccountDTO;
 import org.example.privateclinicwebsitespringboot.DTO.DoctorDTO;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
@@ -62,9 +63,9 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
 
-            List<Appointment> pendingAppointments = appointmentService.getAppointmentsByStatus("Pending");
-            List<Appointment> acceptedAppointments = appointmentService.getAppointmentsByStatus("Accepted");
-            List<Appointment> deniedAppointments = appointmentService.getAppointmentsByStatus("Denied");
+            List<DisplayAppointmentDTO> pendingAppointments = appointmentService.getAppointmentsByStatus("Pending");
+            List<DisplayAppointmentDTO> acceptedAppointments = appointmentService.getAppointmentsByStatus("Accepted");
+            List<DisplayAppointmentDTO> deniedAppointments = appointmentService.getAppointmentsByStatus("Denied");
 
             session.setAttribute("pendingAppointments", pendingAppointments);
             session.setAttribute("acceptedAppointments", acceptedAppointments);

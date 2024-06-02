@@ -83,51 +83,34 @@
         <div class="page-wrapper">
             <div class="content">
                 <div class="card mx-auto mt-5 shadow" style="height: fit-content;">
-                    <div class="card-header text-center">
-                        <h4 class="card-title">Add Appointment</h4>
-                    </div>
                     <div class="card-body slide-in">
-                        <form th:action="@{/user/appointments/add}" th:object="${appointmentDTO}" method="POST">
-                            <div class="row mb-3">
-                                <label for="date" class="col-sm-3 col-form-label">Date</label>
-                                <div class="col-sm-9">
-                                    <input type="datetime-local" class="form-control" id="date" th:field="*{date}"
-                                           required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="note" class="col-sm-3 col-form-label">Note</label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" id="note" th:field="*{note}" rows="4"
-                                              required></textarea>
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary submit-btn">Create Appointment</button>
-                            </div>
-                        </form>
-
-                        <h5 class="mt-5">Existing Appointments</h5>
+                        <div class="card-header text-center">
+                            <h4 class="card-title">Add Appointment</h4>
+                        </div>
+                        <h5 class="mt-5">Today Appointments</h5>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover">
                                 <thead class="text-white" style="background-color: #1aaaff">
                                 <tr>
                                     <th>ID</th>
+                                    <th>Patient Name</th>
                                     <th>Date</th>
                                     <th>Note</th>
                                     <th>Status</th>
                                     <th>Created At</th>
                                 </tr>
                                 </thead>
-                                <tbody th:each="appointment, iterStat : ${session.myAppointments}">
+                                <tbody th:each="appointment, iterStat : ${session.appointments}">
                                 <tr th:class="${appointment.getStatus() == 'Pending' ? 'table-warning' : (appointment.getStatus() == 'Denied' ? 'table-danger' : 'table-success')}"
                                     th:data-id="${appointment.getId()}"
                                     th:data-date="${appointment.getDate()}"
+                                    th:date-patient-name="${appointment.getPatient().getFullName()}"
                                     th:data-note="${appointment.getNote()}"
                                     th:data-status="${appointment.getStatus()}"
                                     th:data-createdat="${appointment.getCreatedAt()}"
                                     onclick="openModal(this)">
                                     <td th:text="${appointment.getId()}"></td>
+                                    <td th:text="${appointment.getPatient().getFullName()}"></td>
                                     <td th:text="${appointment.getDate()}"></td>
                                     <td th:text="${appointment.getNote()}"></td>
                                     <td th:text="${appointment.getStatus()}"></td>
@@ -158,6 +141,10 @@
                     <div class="mb-3">
                         <label for="modalId" class="form-label">ID</label>
                         <input type="text" class="form-control" id="modalId" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalDate" class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" id="patientName" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="modalDate" class="form-label">Date</label>
@@ -196,6 +183,8 @@
 <script>
     function openModal(row) {
         document.getElementById('modalId').value = row.getAttribute('data-id');
+        document.getElementById('patientName').value = row.getAttribute('data-patient-name');
+        document.getElementById('patientName').value = row.getAttribute('data-patient-name');
         document.getElementById('modalDate').value = row.getAttribute('data-date');
         document.getElementById('modalNote').value = row.getAttribute('data-note');
         document.getElementById('modalStatus').value = row.getAttribute('data-status');

@@ -104,19 +104,19 @@
                                 </tr>
                                 </thead>
                                 <tbody th:each="appointment, iterStat : ${session.pendingAppointments}">
-                                <tr th:class="${appointment.status == 'Pending' ? 'table-warning' : (appointment.status == 'Denied' ? 'table-danger' : 'table-success')}"
-                                    th:data-id="${appointment.id}"
-                                    th:data-date="${appointment.date}"
-                                    th:data-note="${appointment.note}"
-                                    th:data-status="${appointment.status}"
-                                    th:data-createdat="${appointment.createdAt}"
+                                <tr th:class="${appointment.getStatus() == 'Pending' ? 'table-warning' : (appointment.getStatus() == 'Denied' ? 'table-danger' : 'table-success')}"
+                                    th:data-id="${appointment.getId()}"
+                                    th:data-date="${appointment.getDate()}"
+                                    th:data-note="${appointment.getNote()}"
+                                    th:data-status="${appointment.getStatus()}"
+                                    th:data-createdat="${appointment.getCreatedAt()}"
                                     onclick="openModal(this)">
-                                    <td th:text="${appointment.id}"></td>
-                                    <td th:text="${appointment.patient.fullName}"></td>
-                                    <td th:text="${appointment.date}"></td>
-                                    <td th:text="${appointment.note}"></td>
-                                    <td th:text="${appointment.status}"></td>
-                                    <td th:text="${appointment.createdAt}"></td>
+                                    <td th:text="${appointment.getId()}"></td>
+                                    <td th:text="${appointment.getPatient().getFullName()}"></td>
+                                    <td th:text="${appointment.getDate()}"></td>
+                                    <td th:text="${appointment.getNote()}"></td>
+                                    <td th:text="${appointment.getStatus()}"></td>
+                                    <td th:text="${appointment.getCreatedAt()}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -136,19 +136,19 @@
                                 </tr>
                                 </thead>
                                 <tbody th:each="appointment, iterStat : ${session.acceptedAppointments}">
-                                <tr th:class="${appointment.status == 'Pending' ? 'table-warning' : (appointment.status == 'Denied' ? 'table-danger' : 'table-success')}"
-                                    th:data-id="${appointment.id}"
-                                    th:data-date="${appointment.date}"
-                                    th:data-note="${appointment.note}"
-                                    th:data-status="${appointment.status}"
-                                    th:data-createdat="${appointment.createdAt}">
-                                    <td th:text="${appointment.id}"></td>
-                                    <td th:text="${appointment.patient.fullName}"></td>
-                                    <td th:text="${appointment.doctor.fullName}"></td>
-                                    <td th:text="${appointment.date}"></td>
-                                    <td th:text="${appointment.note}"></td>
-                                    <td th:text="${appointment.status}"></td>
-                                    <td th:text="${appointment.createdAt}"></td>
+                                <tr th:class="${appointment.getStatus() == 'Pending' ? 'table-warning' : (appointment.getStatus() == 'Denied' ? 'table-danger' : 'table-success')}"
+                                    th:data-id="${appointment.getId()}"
+                                    th:data-date="${appointment.getDate()}"
+                                    th:data-note="${appointment.getNote()}"
+                                    th:data-status="${appointment.getDate()}"
+                                    th:data-createdat="${appointment.getCreatedAt()}">
+                                    <td th:text="${appointment.getId()}"></td>
+                                    <td th:text="${appointment.getPatient().getFullName()}"></td>
+                                    <td th:text="${appointment.getDoctor().getFullName()}"></td>
+                                    <td th:text="${appointment.getDate()}"></td>
+                                    <td th:text="${appointment.getNote()}"></td>
+                                    <td th:text="${appointment.getStatus()}"></td>
+                                    <td th:text="${appointment.getCreatedAt()}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -166,17 +166,17 @@
                                 </tr>
                                 </thead>
                                 <tbody th:each="appointment, iterStat : ${session.deniedAppointments}">
-                                <tr th:class="${appointment.status == 'Pending' ? 'table-warning' : (appointment.status == 'Denied' ? 'table-danger' : 'table-success')}"
-                                    th:data-id="${appointment.id}"
-                                    th:data-date="${appointment.date}"
-                                    th:data-note="${appointment.note}"
-                                    th:data-status="${appointment.status}"
-                                    th:data-createdat="${appointment.createdAt}">
-                                    <td th:text="${appointment.id}"></td>
-                                    <td th:text="${appointment.date}"></td>
-                                    <td th:text="${appointment.note}"></td>
-                                    <td th:text="${appointment.status}"></td>
-                                    <td th:text="${appointment.createdAt}"></td>
+                                <tr th:class="${appointment.getStatus() == 'Pending' ? 'table-warning' : (appointment.getStatus() == 'Denied' ? 'table-danger' : 'table-success')}"
+                                    th:data-id="${appointment.getId()}"
+                                    th:data-date="${appointment.getDate()}"
+                                    th:data-note="${appointment.getNote()}"
+                                    th:data-status="${appointment.getStatus()}"
+                                    th:data-createdat="${appointment.getCreatedAt()}">
+                                    <td th:text="${appointment.getId()}"></td>
+                                    <td th:text="${appointment.getDate()}"></td>
+                                    <td th:text="${appointment.getNote()}"></td>
+                                    <td th:text="${appointment.getStatus()}"></td>
+                                    <td th:text="${appointment.getCreatedAt()}"></td>
                                 </tr>
                                 </tbody>
                             </table>

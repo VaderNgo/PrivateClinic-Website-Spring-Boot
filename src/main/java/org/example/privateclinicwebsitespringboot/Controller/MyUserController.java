@@ -2,6 +2,7 @@ package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.privateclinicwebsitespringboot.DTO.AppointmentDTO;
+import org.example.privateclinicwebsitespringboot.DTO.DisplayAppointmentDTO;
 import org.example.privateclinicwebsitespringboot.Handler.MessageHandler;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
@@ -54,16 +55,16 @@ public class MyUserController {
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
             mav.addObject("user",myUser);
             mav.addObject("active","appointments");
-            mav.setViewName("user-appointment");
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
             mav.addObject("appointmentDTO",new AppointmentDTO());
             mav.addObject("appointment",appointment);
-            List<Appointment> myAppointments = appointmentService.getMyAppointments(myUser);
+            List<DisplayAppointmentDTO> myAppointments = appointmentService.getMyAppointments(myUser);
             session.setAttribute("myAppointments",myAppointments);
         }catch (Exception e){
             System.out.println(e);
         }
+        mav.setViewName("user-appointment");
         return mav;
     }
 

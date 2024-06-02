@@ -17,7 +17,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm::ss")
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm::ss")
     private LocalDateTime date;
 
     private String note;

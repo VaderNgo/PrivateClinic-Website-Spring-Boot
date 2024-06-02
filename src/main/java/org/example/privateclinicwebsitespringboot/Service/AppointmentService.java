@@ -1,6 +1,7 @@
 package org.example.privateclinicwebsitespringboot.Service;
 
 import org.example.privateclinicwebsitespringboot.DTO.AppointmentDTO;
+import org.example.privateclinicwebsitespringboot.DTO.DisplayAppointmentDTO;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.Doctor;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +21,7 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-    public Appointment createAppointment(AppointmentDTO appointmentDTO, MyUser myUser){
+    public Appointment createAppointment(AppointmentDTO appointmentDTO, MyUser myUser) {
         Appointment appointment = new Appointment();
         appointment.setDate(appointmentDTO.getDate());
         appointment.setNote(appointmentDTO.getNote());
@@ -28,40 +31,66 @@ public class AppointmentService {
         return appointment;
     }
 
-    public List<Appointment> getMyAppointments(MyUser myUser){
-        return appointmentRepository.findMyAppointments(myUser.getPatient().getId());
+    public String formatAppointmentDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
+        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
+        return localDateTime.format(displayFormatter);
+    }
+
+    public List<DisplayAppointmentDTO> getMyAppointments(MyUser myUser) {
+        List<DisplayAppointmentDTO> temp = new ArrayList<>();
+        List<Appointment> appointments = appointmentRepository.findMyAppointments(myUser.getPatient().getId());
+        for (Appointment appointment : appointments) {
+            temp.add(new DisplayAppointmentDTO(appointment));
+        }
+        return temp;
     }
 
 
-    public boolean isDateNotPicked(AppointmentDTO appointmentDTO){
+    public boolean isDateNotPicked(AppointmentDTO appointmentDTO) {
         List<Appointment> appointments = appointmentRepository.findAppointmentsNotDenied();
-        for(Appointment appointment:appointments){
-            if(appointment.getDate().equals(appointmentDTO.getDate())){
+        for (Appointment appointment : appointments) {
+            if (appointment.getDate().equals(appointmentDTO.getDate())) {
                 return false;
             }
         }
         return true;
     }
 
-    public List<Appointment> getAppointmentsByStatus(String status){
-        return appointmentRepository.findAppointmentsByStatus(status);
+    public List<DisplayAppointmentDTO> getAppointmentsByStatus(String status) {
+        List<DisplayAppointmentDTO> temp = new ArrayList<>();
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByStatus(status);
+        for (Appointment appointment : appointments) {
+            temp.add(new DisplayAppointmentDTO(appointment));
+        }
+        return temp;
     }
 
-    public void acceptAppointment(Long appointmentId, Doctor doctor){
+    public void acceptAppointment(Long appointmentId, Doctor doctor) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
-        if(appointment.isPresent()){
+        if (appointment.isPresent()) {
             appointment.get().setStatus("Accepted");
             appointment.get().setDoctor(doctor);
             appointmentRepository.save(appointment.get());
         }
     }
 
-    public void denyAppointment(Long appointmentId){
+    public void denyAppointment(Long appointmentId) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
-        if(appointment.isPresent()){
+        if (appointment.isPresent()) {
             appointment.get().setStatus("Denied");
             appointmentRepository.save(appointment.get());
         }
     }
-    
+
+
+    public List<DisplayAppointmentDTO> getDoctorTodayAppointments(Long doctorId) {
+        List<DisplayAppointmentDTO> temp = new ArrayList<>();
+        List<Appointment> appointments = appointmentRepository.findDoctorTodayAppointments(doctorId,LocalDate.now());
+        for (Appointment appointment : appointments) {
+            temp.add(new DisplayAppointmentDTO(appointment));
+        }
+        return temp;
+    }
 }

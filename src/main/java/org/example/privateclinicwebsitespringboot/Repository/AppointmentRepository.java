@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +24,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment a WHERE a.status = :status")
     List<Appointment> findAppointmentsByStatus(@Param(value = "status") String status);
+
+    @Query("SELECT a FROM Appointment a WHERE CAST(a.date as DATE) = CAST(:date as DATE ) AND a.status='Accepted' AND a.doctor.id = :doctorId")
+    List<Appointment> findDoctorTodayAppointments(@Param(value = "doctorId") Long doctorId, @Param(value = "date") LocalDate date);
 
 }
