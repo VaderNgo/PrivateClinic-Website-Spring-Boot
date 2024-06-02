@@ -21,4 +21,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT a FROM Appointment a WHERE (a.status = 'Pending' OR a.status = 'Accepted')")
     List<Appointment> findAppointmentsNotDenied();
 
+    @Query("SELECT a FROM Appointment a WHERE a.status = :status")
+    List<Appointment> findAppointmentsByStatus(@Param(value = "status") String status);
+
 }

@@ -1,5 +1,6 @@
 package org.example.privateclinicwebsitespringboot.Service;
 
+import org.example.privateclinicwebsitespringboot.DTO.DoctorAccountDTO;
 import org.example.privateclinicwebsitespringboot.DTO.SignUpDTO;
 import org.example.privateclinicwebsitespringboot.Model.Doctor;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
@@ -63,11 +64,11 @@ public class MyUserService implements UserDetailsService {
         myUserRepository.save(myUser);
         return myUser;
     }
-    public MyUser signUpDoctor(SignUpDTO signUpDTO, PasswordEncoder passwordEncoder, Doctor doctor){
+    public MyUser signUpDoctor(DoctorAccountDTO doctorAccountDTO, PasswordEncoder passwordEncoder,Doctor doctor){
         MyUser myUser = new MyUser();
-        myUser.setUsername(signUpDTO.getUsername());
-        myUser.setEmail(signUpDTO.getEmail());
-        myUser.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
+        myUser.setUsername(doctorAccountDTO.getUsername());
+        myUser.setEmail(doctorAccountDTO.getEmail());
+        myUser.setPassword(passwordEncoder.encode(doctorAccountDTO.getPassword()));
         myUser.setRole("DOCTOR");
         myUser.setDoctor(doctor);
         myUserRepository.save(myUser);

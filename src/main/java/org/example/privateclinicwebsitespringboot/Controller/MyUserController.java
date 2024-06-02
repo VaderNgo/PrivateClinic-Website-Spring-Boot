@@ -35,7 +35,7 @@ public class MyUserController {
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
             mav.addObject("user",myUser);
             mav.addObject("active","dashboard");
-            mav.setViewName("dashboard");
+            mav.setViewName("user-dashboard");
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
             mav.addObject("content","content.html");
