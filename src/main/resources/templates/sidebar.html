@@ -25,6 +25,15 @@
                     <a href="/admin/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                 </li>
             </ul>
+            <ul th:case="'DOCTOR'">
+                <li class="menu-title">Main</li>
+                <li th:class="${active == 'dashboard'} ? 'active' : ''">
+                    <a href="/doctor/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                </li>
+                <li th:class="${active == 'appointments'} ? 'active' : ''">
+                    <a href="/doctor/appointments"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

@@ -85,9 +85,8 @@
                 <div class="card mx-auto mt-5 shadow" style="height: fit-content;">
                     <div class="card-body slide-in">
                         <div class="card-header text-center">
-                            <h4 class="card-title">Add Appointment</h4>
+                            <h4 class="card-title">Today Appointment</h4>
                         </div>
-                        <h5 class="mt-5">Today Appointments</h5>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover">
                                 <thead class="text-white" style="background-color: #1aaaff">
@@ -166,6 +165,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="/doctor/bills/add" method="post" style="min-width: auto">
+                    <input type="hidden" name="appointmentId">
+                    <button type="submit" class="btn btn-primary">Create Bill</button>
+                </form>
             </div>
         </div>
     </div>
@@ -189,10 +192,11 @@
         document.getElementById('modalNote').value = row.getAttribute('data-note');
         document.getElementById('modalStatus').value = row.getAttribute('data-status');
         document.getElementById('modalCreatedAt').value = row.getAttribute('data-createdat');
-
+        document.querySelector('#appointmentModal input[name="appointmentId"]').value = row.getAttribute('data-id');
         var modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
         modal.show();
     }
+
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

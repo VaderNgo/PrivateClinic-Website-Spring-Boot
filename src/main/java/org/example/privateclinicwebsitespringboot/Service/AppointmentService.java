@@ -93,4 +93,17 @@ public class AppointmentService {
         }
         return temp;
     }
+
+    public Appointment setFinishAppointment(Long appointmentId) {
+        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+        if(appointment.isPresent()){
+            appointment.get().setStatus("Finished");
+            appointmentRepository.save(appointment.get());
+            return appointment.get();
+        }else{
+            System.out.println("Appointment not found");
+            return null;
+        }
+    }
+
 }

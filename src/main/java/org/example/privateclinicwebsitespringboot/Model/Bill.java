@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -19,7 +20,7 @@ public class Bill {
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "appoinment_id",nullable = true)
     private Appointment appoinment;
-
+    
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = true)
     private Patient patient;
@@ -29,7 +30,7 @@ public class Bill {
     private Doctor doctor;
 
     @OneToMany(mappedBy="bill")
-    private Set<BillDetail> billDetailSet;
+    private Set<BillDetail> billDetailSet = new HashSet<>();
 
     private Float totalMoney = 0.0f;
 
@@ -81,6 +82,9 @@ public class Bill {
     }
 
     public void addBillDetail(BillDetail billDetail){
+        if (this.billDetailSet == null) {
+            this.billDetailSet = new HashSet<>();
+        }
         this.billDetailSet.add(billDetail);
     }
 
