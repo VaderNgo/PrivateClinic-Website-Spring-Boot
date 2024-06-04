@@ -222,7 +222,7 @@
                     <div class="mb-3">
                         <label for="modalDoctor" class="form-label">Doctor</label>
                         <select class="form-control" id="modalDoctor">
-                            <option th:each="doctor : ${session.doctors}" th:value="*{doctor.id}" th:text="*{doctor.fullName}"></option>
+                            <option th:each="doctor,stat : ${session.doctors}" th:value="*{doctor.id}" th:text="*{doctor.fullName}" th:selected="${stat.index == 0}"></option>
                         </select>
                     </div>
                 </form>

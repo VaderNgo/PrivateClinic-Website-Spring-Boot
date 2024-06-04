@@ -1,10 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script
+            src="https://kit.fontawesome.com/64d58efce2.js"
+            crossorigin="anonymous"
+    ></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/static/css/font_awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/custom.css}">
+    <link rel="stylesheet" th:href="@{/static/css/animation.css}">
+    <style>
+        /* CSS for making the table scrollable */
+        .scrollable-table {
+            max-height: 200px; /* Adjust the height as needed */
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body>
+<div class="main-wrapper">
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${header}" th:replace="${header} :: header(${user})"></div>
+        <div th:if="${sidebar}" th:replace="${sidebar} :: sidebar(${active},${user})"></div>
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body slide-in">
+                                <h2 class="text-center">Bill Management</h2>
+                                <h5 class="card-title">Bill Information</h5>
+                                <p><strong>Bill ID:</strong> <span th:text="${billDTO.getId()}"></span></p>
+                                <p><strong>Patient Name:</strong> <span th:text="${billDTO.getPatient().getFullName()}"></span></p>
+                                <p><strong>Doctor Name:</strong> <span th:text="${billDTO.getDoctor().getFullName()}"></span></p>
+                                <p><strong>Date:</strong> <span th:text="${billDTO.getDoctor()  }"></span></p>
+                                <p><strong>Total Money:</strong> <span th:text="${billDTO.totalMoney} + ' VND'"></span></p>
 
+                                <h5 class="mt-4">Bill Details</h5>
+                                <form id="billDetailsForm" th:action="@{/doctor/bills/updateDetails}" th:object="${billDTO}" method="post">
+                                    <input type="hidden" name="billId" th:value="${billDTO.id}">
+                                    <div class="scrollable-table">
+                                        <table id="billDetailsTable" class="table table-bordered">
+                                            <thead class="text-white" style="background-color: #1aaaff">
+                                            <tr>
+                                                <th>Medicine</th>
+                                                <th>Quantity</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="detail,stat : ${billDTO.billDetailSet}">
+                                                <td><input type="text" name="medicine" class="form-control" th:value="${detail.medicineName}" /></td>
+                                                <td><input type="number" name="quantity" class="form-control" th:value="${detail.quantity}" /></td>
+                                                <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="addRow()">+ Add Detail</button>
+                                    <button type="submit" class="btn btn-success">Update Bill</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidebar-overlay" data-reff=""></div>
+<script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/static/js/popper.min.js}"></script>
+<script th:src="@{/static/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/js/jquery.slimscroll.js}"></script>
+<script th:src="@{/static/js/select2.min.js}"></script>
+<script th:src="@{/static/js/moment.min.js}"></script>
+<script th:src="@{/static/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/static/js/app.js}"></script>
+<script>
+    function addRow() {
+        var table = document.getElementById("billDetailsTable").getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow();
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+
+        cell1.innerHTML = '<input type="text" name="medicine" class="form-control" />';
+        cell2.innerHTML = '<input type="number" name="quantity" class="form-control" />';
+        cell3.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>';
+    }
+
+    function removeRow(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
 </body>
 </html>

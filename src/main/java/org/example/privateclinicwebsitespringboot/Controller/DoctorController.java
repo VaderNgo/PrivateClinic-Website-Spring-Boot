@@ -1,23 +1,18 @@
 package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.example.privateclinicwebsitespringboot.DTO.BillDTO;
 import org.example.privateclinicwebsitespringboot.DTO.DisplayAppointmentDTO;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.Bill;
 import org.example.privateclinicwebsitespringboot.Model.Doctor;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
-import org.example.privateclinicwebsitespringboot.Service.AppointmentService;
-import org.example.privateclinicwebsitespringboot.Service.BillService;
-import org.example.privateclinicwebsitespringboot.Service.DoctorService;
-import org.example.privateclinicwebsitespringboot.Service.MyUserService;
+import org.example.privateclinicwebsitespringboot.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -33,23 +28,23 @@ public class DoctorController {
     private AppointmentService appointmentService;
     @Autowired
     private BillService billService;
-
+    @Autowired
+    private BillDetailService billDetailService;
 
     @GetMapping("/dashboard")
-    public ModelAndView userDashboard(){
+    public ModelAndView userDashboard() {
         ModelAndView mav = new ModelAndView();
-        try{
+        try {
             //get current logged user
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
-            mav.addObject("user",myUser);
-            mav.addObject("active","dashboard");
+            mav.addObject("user", myUser);
+            mav.addObject("active", "dashboard");
             mav.setViewName("user-dashboard");
-            mav.addObject("header","header.html");
-            mav.addObject("sidebar","sidebar.html");
-            mav.addObject("content","content.html");
-        }
-        catch(Exception e) {
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+            mav.addObject("content", "content.html");
+        } catch (Exception e) {
             System.out.println(e);
         }
         return mav;
@@ -86,8 +81,8 @@ public class DoctorController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
 
-            Bill bill = billService.getBillById(billId);
-            session.setAttribute("bill", bill);
+            BillDTO billDTO = new BillDTO(billService.getBillById(billId));
+            mav.addObject("billDTO", billDTO);
 
         } catch (Exception e) {
             System.out.println(e);
@@ -114,6 +109,26 @@ public class DoctorController {
         } catch (Exception e) {
             System.out.println(e);
         }
+        return mav;
+    }
+
+    @PostMapping("/bills/updateDetails")
+    public ModelAndView updateBillDetails(@RequestParam("billId") Long billId,
+                                          @RequestParam("medicine") List<String> medicines,
+                                          @RequestParam("quantity") List<Integer> quantities, HttpSession session) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "bills");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/");
         return mav;
     }
 }
