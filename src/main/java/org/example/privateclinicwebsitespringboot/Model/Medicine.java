@@ -2,6 +2,9 @@ package org.example.privateclinicwebsitespringboot.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -18,6 +21,9 @@ public class Medicine {
     private String unit;
 
     private String description;
+
+    @CreatedDate
+    private LocalDate createdAt = LocalDate.now();
 
     public Medicine(){
 
@@ -61,5 +67,13 @@ public class Medicine {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 }

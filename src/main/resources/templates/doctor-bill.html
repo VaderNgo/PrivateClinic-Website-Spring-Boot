@@ -36,7 +36,7 @@
                                 <p><strong>Bill ID:</strong> <span th:text="${billDTO.getId()}"></span></p>
                                 <p><strong>Patient Name:</strong> <span th:text="${billDTO.getPatient().getFullName()}"></span></p>
                                 <p><strong>Doctor Name:</strong> <span th:text="${billDTO.getDoctor().getFullName()}"></span></p>
-                                <p><strong>Date:</strong> <span th:text="${billDTO.getDoctor()  }"></span></p>
+                                <p><strong>Date:</strong> <span th:text="${billDTO.getCreatedAt()  }"></span></p>
                                 <p><strong>Total Money:</strong> <span th:text="${billDTO.totalMoney} + ' VND'"></span></p>
 
                                 <h5 class="mt-4">Bill Details</h5>

@@ -7,9 +7,11 @@ import org.example.privateclinicwebsitespringboot.DTO.DoctorAccountDTO;
 import org.example.privateclinicwebsitespringboot.DTO.DoctorDTO;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.Doctor;
+import org.example.privateclinicwebsitespringboot.Model.Medicine;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
 import org.example.privateclinicwebsitespringboot.Service.AppointmentService;
 import org.example.privateclinicwebsitespringboot.Service.DoctorService;
+import org.example.privateclinicwebsitespringboot.Service.MedicineService;
 import org.example.privateclinicwebsitespringboot.Service.MyUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -33,6 +35,8 @@ public class AdminController {
     private DoctorService doctorService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MedicineService medicineService;
 
     @GetMapping("/dashboard")
     public ModelAndView adminDashboard() {
@@ -157,4 +161,60 @@ public class AdminController {
         return mav;
     }
 
+    @GetMapping("/medicines")
+    public ModelAndView doctorMedicines() {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "medicines");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+            List<Medicine> medicines = medicineService.getAllMedicines();
+
+            mav.addObject("medicines", medicines);
+            mav.addObject("medicine", new Medicine());
+        } catch (Exception e) {
+
+        }
+        mav.setViewName("admin-medicine");
+        return mav;
+    }
+
+    @PostMapping("/medicines/add")
+    public ModelAndView addMedicine(@ModelAttribute("Medicine") Medicine medicine) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "medicines");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+            medicineService.addMedicine(medicine);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/medicines");
+        return mav;
+    }
+
+    @PostMapping("/medicines/delete")
+    public ModelAndView deleteMedicine(@RequestParam("medicineId") Long medicineId) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "medicines");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+            medicineService.deleteMedicine(medicineId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/medicines");
+        return mav;
+    }
 }

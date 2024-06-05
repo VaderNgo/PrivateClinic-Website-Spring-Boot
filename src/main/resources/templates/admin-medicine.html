@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://kit.fontawesome.com/64d58efce2.js"
+            crossorigin="anonymous"
+    ></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/static/css/font_awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/custom.css}">
+    <style>
+        .table-responsive {
+            max-height: 400px; /* Adjust height as needed */
+            overflow-y: auto;
+        }
+
+        .table td, .table th {
+            max-width: 150px; /* Adjust width as needed */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        textarea {
+            width: 100%;
+            resize: none;
+        }
+
+        .table-bordered > thead > tr > th {
+            border: 1px solid black;
+        }
+
+        .table .table-bordered > tbody > tr > th {
+            border: 1px solid black;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .card-body.slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideRightToLeft {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .toast.show.slide-right-to-left {
+            animation: slideRightToLeft 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+<div class="main-wrapper">
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${header}" th:replace="${header} :: header(${user})"></div>
+        <div th:if="${sidebar}" th:replace="${sidebar} :: sidebar(${active},${user})"></div>
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="card mx-auto mt-5 shadow" style="height: fit-content;">
+                    <div class="card-header text-center">
+                        <h4 class="card-title">Medicines Management</h4>
+                    </div>
+                    <div class="card-body slide-in">
+                        <h5>Existing Medicines</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="text-white" style="background-color: #1aaaff">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Unit</th>
+                                    <th>Price Per Unit</th>
+                                    <th>Created At</th>
+                                </tr>
+                                </thead>
+                                <tbody th:each="medicine, iterStat : ${medicines}">
+                                <tr
+                                        th:data-id="${medicine.getId()}"
+                                        th:data-name="${medicine.getName()}"
+                                        th:data-description="${medicine.getDescription()}"
+                                        th:data-unit="${medicine.getUnit()}"
+                                        th:data-priceperunit="${medicine.getPricePerUnit()}"
+                                        th:data-createdat="${medicine.getCreatedAt()}"
+                                        onclick="openModal(this)"
+                                >
+                                    <td th:text="${medicine.getId()}"></td>
+                                    <td th:text="${medicine.getName()}"></td>
+                                    <td th:text="${medicine.getDescription()}"></td>
+                                    <td th:text="${medicine.getUnit()}"></td>
+                                    <td th:text="${medicine.getPricePerUnit()} + ' VND'"></td>
+                                    <td th:text="${medicine.getCreatedAt()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAddModal()">Add More Medicine</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteMedicineModal" tabindex="-1" aria-labelledby="deleteMedicineModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteMedicineModalLabel">Confirm Delete</h5>
+                <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete medicine with ID: <span id="deleteMedicineId"></span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form th:action="@{/admin/medicines/delete}" method="POST">
+                    <input th:name="medicineId" hidden id="medicineDeleteId">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="medicineModal" tabindex="-1" aria-labelledby="medicineModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:object="${medicine}" method="POST" th:action="@{/admin/medicines/add}">
+                <div class="modal-header" style="background-color: #1aaaff">
+                    <h5 class="modal-title text-white" id="medicineModalLabel">Add Medicine</h5>
+                    <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="modalName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="modalName" th:field="*{name}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalDescription" class="form-label">Description</label>
+                        <textarea class="form-control" rows="3" id="modalDescription"
+                                  th:field="*{description}" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalUnit" class="form-label">Unit</label>
+                        <input type="text" class="form-control" id="modalUnit" th:field="*{unit}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalPricePerUnit" class="form-label">Price Per Unit</label>
+                        <input type="number" class="form-control" id="modalPricePerUnit" th:field="*{pricePerUnit}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="medicineDetailModal" tabindex="-1" aria-labelledby="appointmentModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #1aaaff">
+                <h5 class="modal-title text-white" id="appointmentModalLabel">Medicine Details</h5>
+                <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="medicineId" class="form-label">ID</label>
+                        <input type="text" class="form-control" id="medicineId" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicineName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="medicineName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicineDescription" class="form-label">Description</label>
+                        <textarea class="form-control" rows="3" id="medicineDescription" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicineUnit" class="form-label">Unit</label>
+                        <input type="text" class="form-control" id="medicineUnit" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicinePrice" class="form-label">Price per Unit</label>
+                        <input type="text" class="form-control" id="medicinePrice" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicineCreatedAt" class="form-label">Created At</label>
+                        <input type="text" class="form-control" id="medicineCreatedAt" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-danger" data-dismiss="modal" onclick="openDeleteModal(
+
+                )">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar-overlay" data-reff=""></div>
+<script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/static/js/popper.min.js}"></script>
+<script th:src="@{/static/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/js/jquery.slimscroll.js}"></script>
+<script th:src="@{/static/js/select2.min.js}"></script>
+<script th:src="@{/static/js/moment.min.js}"></script>
+<script th:src="@{/static/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/static/js/app.js}"></script>
+<script>
+    function openAddModal() {
+        var modal = new bootstrap.Modal(document.getElementById('medicineModal'));
+        modal.show();
+    }
+    function openModal(row) {
+        document.getElementById('medicineId').value = row.getAttribute('data-id');
+        document.getElementById('medicineName').value = row.getAttribute('data-name');
+        document.getElementById('medicineDescription').value = row.getAttribute('data-description');
+        document.getElementById('medicineUnit').value = row.getAttribute('data-unit');
+        document.getElementById('medicinePrice').value = row.getAttribute('data-priceperunit') + " VND";
+        document.getElementById('medicineCreatedAt').value = row.getAttribute('data-createdat');
+
+        var modal = new bootstrap.Modal(document.getElementById('medicineDetailModal'));
+        modal.show();
+    }
+
+    function openDeleteModal() {
+        var medicineId = document.getElementById('medicineId').value;
+        document.getElementById('medicineDeleteId').value = medicineId;
+        console.log(medicineId);
+        document.getElementById('deleteMedicineId').textContent = medicineId;
+        var modal = new bootstrap.Modal(document.getElementById('deleteMedicineModal'));
+        modal.show();
+    }
+
+</script>
+</body>
+</html>
