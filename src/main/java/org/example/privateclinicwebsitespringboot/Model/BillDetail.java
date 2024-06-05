@@ -2,6 +2,7 @@ package org.example.privateclinicwebsitespringboot.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
@@ -10,19 +11,17 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "BillDetails")
+@ToString(exclude = {"bill"})
 public class BillDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="bill_id", nullable=true)
     private Bill bill;
-
     private String medicineName;
-
     private Float price;
-
     private Integer quantity;
 
 

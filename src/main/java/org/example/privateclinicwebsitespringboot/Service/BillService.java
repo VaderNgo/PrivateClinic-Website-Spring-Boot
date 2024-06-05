@@ -1,5 +1,6 @@
 package org.example.privateclinicwebsitespringboot.Service;
 
+import jakarta.transaction.Transactional;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.Bill;
 import org.example.privateclinicwebsitespringboot.Repository.BillRepository;
@@ -13,14 +14,29 @@ public class BillService {
 
     public Bill createBillForAppointment(Appointment appointment){
         Bill bill = new Bill();
-        bill.setAppoinment(appointment);
+        bill.setAppointment(appointment);
         bill.setPatient(appointment.getPatient());
         bill.setDoctor(appointment.getDoctor());
         billRepository.save(bill);
         return bill;
     }
 
+    @Transactional
+    public Bill saveBill(Bill bill){
+        bill.setTotalMoney(bill.calculateTotalMoney());
+        return billRepository.save(bill);
+    }
+
+    @Transactional
+    public void updateTotalMoney(float totalMoney, Long billId){
+        billRepository.updateTotalMoney(totalMoney, billId);
+    }
+
     public Bill getBillById(Long id){
         return billRepository.findById(id).get();
+    }
+
+    public Bill getBillByAppointmentId(Long appointmentId){
+        return billRepository.findByAppointmentId(appointmentId);
     }
 }

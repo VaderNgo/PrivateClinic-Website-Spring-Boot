@@ -24,6 +24,9 @@
                 <li th:class="${active == 'doctors'} ? 'active' : ''">
                     <a href="/admin/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                 </li>
+                <li th:class="${active == 'medicines'} ? 'active' : ''">
+                    <a href="/admin/medicines"><i class="fa fa-medkit"></i> <span>Medicines</span></a>
+                </li>
             </ul>
             <ul th:case="'DOCTOR'">
                 <li class="menu-title">Main</li>

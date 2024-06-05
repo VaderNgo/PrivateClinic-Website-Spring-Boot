@@ -22,4 +22,8 @@ public class MedicineService {
     public void deleteMedicine(Long id) {
         medicineRepository.deleteById(id);
     }
+
+    public Medicine getMedicineByName(String name) {
+        return medicineRepository.findByName(name);
+    }
 }

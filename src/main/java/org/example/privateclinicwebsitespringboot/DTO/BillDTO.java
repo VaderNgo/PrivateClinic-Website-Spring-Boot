@@ -21,7 +21,7 @@ public class BillDTO {
         this.id = bill.getId();
         this.patient = bill.getPatient();
         this.doctor = bill.getDoctor();
-        this.appointment = bill.getAppoinment();
+        this.appointment = bill.getAppointment();
         this.billDetailSet = bill.getBillDetailSet();
         this.totalMoney = bill.getTotalMoney();
         this.createdAt = bill.getCreatedAt();

@@ -2,16 +2,18 @@ package org.example.privateclinicwebsitespringboot.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "Bills")
+@ToString(exclude = {"billDetailSet"})
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +21,7 @@ public class Bill {
 
     @OneToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "appoinment_id",nullable = true)
-    private Appointment appoinment;
+    private Appointment appointment;
     
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = true)
@@ -29,7 +31,8 @@ public class Bill {
     @JoinColumn(name = "doctor_id", nullable = true)
     private Doctor doctor;
 
-    @OneToMany(mappedBy="bill")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bill", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
     private Set<BillDetail> billDetailSet = new HashSet<>();
 
     private Float totalMoney = 0.0f;
@@ -49,12 +52,12 @@ public class Bill {
         this.id = id;
     }
 
-    public Appointment getAppoinment() {
-        return appoinment;
+    public Appointment getAppointment() {
+        return appointment;
     }
 
-    public void setAppoinment(Appointment appoinment) {
-        this.appoinment = appoinment;
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
     public Patient getPatient() {
@@ -102,5 +105,13 @@ public class Bill {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public float calculateTotalMoney() {
+        totalMoney = 0.0f;
+        for (BillDetail detail : billDetailSet) {
+            totalMoney += detail.getPrice();
+        }
+        return totalMoney;
     }
 }
