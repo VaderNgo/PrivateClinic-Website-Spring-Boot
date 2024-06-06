@@ -7,6 +7,8 @@ import org.example.privateclinicwebsitespringboot.Repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BillService {
     @Autowired
@@ -25,6 +27,10 @@ public class BillService {
     public Bill saveBill(Bill bill){
         bill.setTotalMoney(bill.calculateTotalMoney());
         return billRepository.save(bill);
+    }
+
+    public List<Bill> getAllBills(){
+        return billRepository.findAll();
     }
 
     @Transactional

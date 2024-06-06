@@ -67,6 +67,15 @@ public class AppointmentService {
         return temp;
     }
 
+    public List<DisplayAppointmentDTO> getAppointmentsByStatusForDoctor(String status, Long doctorId){
+        List<DisplayAppointmentDTO> temp = new ArrayList<>();
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByStatusForDoctor(status,doctorId);
+        for (Appointment appointment : appointments) {
+            temp.add(new DisplayAppointmentDTO(appointment));
+        }
+        return temp;
+    }
+
     public void acceptAppointment(Long appointmentId, Doctor doctor) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
         if (appointment.isPresent()) {

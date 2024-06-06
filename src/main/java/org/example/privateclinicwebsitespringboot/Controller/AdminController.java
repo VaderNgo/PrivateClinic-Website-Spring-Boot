@@ -1,18 +1,9 @@
 package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.example.privateclinicwebsitespringboot.DTO.AppointmentDTO;
-import org.example.privateclinicwebsitespringboot.DTO.DisplayAppointmentDTO;
-import org.example.privateclinicwebsitespringboot.DTO.DoctorAccountDTO;
-import org.example.privateclinicwebsitespringboot.DTO.DoctorDTO;
-import org.example.privateclinicwebsitespringboot.Model.Appointment;
-import org.example.privateclinicwebsitespringboot.Model.Doctor;
-import org.example.privateclinicwebsitespringboot.Model.Medicine;
-import org.example.privateclinicwebsitespringboot.Model.MyUser;
-import org.example.privateclinicwebsitespringboot.Service.AppointmentService;
-import org.example.privateclinicwebsitespringboot.Service.DoctorService;
-import org.example.privateclinicwebsitespringboot.Service.MedicineService;
-import org.example.privateclinicwebsitespringboot.Service.MyUserService;
+import org.example.privateclinicwebsitespringboot.DTO.*;
+import org.example.privateclinicwebsitespringboot.Model.*;
+import org.example.privateclinicwebsitespringboot.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -37,6 +27,10 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private MedicineService medicineService;
+    @Autowired
+    private BillDetailService billDetailService;
+    @Autowired
+    private  BillService billService;
 
     @GetMapping("/dashboard")
     public ModelAndView adminDashboard() {
@@ -215,6 +209,40 @@ public class AdminController {
             System.out.println(e);
         }
         mav.setViewName("redirect:/admin/medicines");
+        return mav;
+    }
+
+    @GetMapping("/bills")
+    public ModelAndView adminBills() {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "bills");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+
+            List<Bill> bills  = billService.getAllBills();
+            List<BillDisplayDTO> billDisplayDTOS = new ArrayList<>();
+            for(Bill bill : bills){
+                Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
+                Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
+                for(BillDetail billDetail : billDetails){
+                    Medicine medicine = medicineService.getMedicineByName(billDetail.getMedicineName());
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,medicine));
+                }
+                String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
+                String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";
+                billDisplayDTOS.add(new BillDisplayDTO(bill, patientEmail, doctorEmail, billDetailDTOS));
+            }
+
+            mav.addObject("billDisplayDTOS",billDisplayDTOS);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("admin-bill");
         return mav;
     }
 }

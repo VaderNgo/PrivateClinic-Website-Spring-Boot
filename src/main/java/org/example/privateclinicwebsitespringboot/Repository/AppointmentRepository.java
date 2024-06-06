@@ -28,4 +28,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query("SELECT a FROM Appointment a WHERE CAST(a.date as DATE) = CAST(:date as DATE ) AND a.status='Accepted' AND a.doctor.id = :doctorId")
     List<Appointment> findDoctorTodayAppointments(@Param(value = "doctorId") Long doctorId, @Param(value = "date") LocalDate date);
 
+    @Query("SELECT a FROM Appointment a WHERE a.status = :status AND a.doctor.id = :doctorId")
+    List<Appointment> findAppointmentsByStatusForDoctor(@Param(value = "status") String status,@Param(value = "doctorId") Long doctorId);
 }

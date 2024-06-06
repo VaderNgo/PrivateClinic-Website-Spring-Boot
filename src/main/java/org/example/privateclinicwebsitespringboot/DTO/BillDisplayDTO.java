@@ -7,10 +7,18 @@ import java.util.Set;
 
 public class BillDisplayDTO {
     private Bill bill;
-    private Set<BillDetail> billDetailSet;
+    private String patientEmail;
+    private String doctorEmail;
 
-    public BillDisplayDTO(){
+    private Set<BillDetailDTO> billDetailDTOs;
 
+    public BillDisplayDTO() {
+    }
+    public BillDisplayDTO(Bill bill, String patientEmail, String doctorEmail, Set<BillDetailDTO> billDetailDTOs) {
+        this.bill = bill;
+        this.patientEmail = patientEmail;
+        this.doctorEmail = doctorEmail;
+        this.billDetailDTOs = billDetailDTOs;
     }
 
     public Bill getBill() {
@@ -21,11 +29,27 @@ public class BillDisplayDTO {
         this.bill = bill;
     }
 
-    public Set<BillDetail> getBillDetailSet() {
-        return billDetailSet;
+    public String getPatientEmail() {
+        return patientEmail;
     }
 
-    public void setBillDetailSet(Set<BillDetail> billDetailSet) {
-        this.billDetailSet = billDetailSet;
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
+    }
+
+    public String getDoctorEmail() {
+        return doctorEmail;
+    }
+
+    public void setDoctorEmail(String doctorEmail) {
+        this.doctorEmail = doctorEmail;
+    }
+
+    public Set<BillDetailDTO> getBillDetailDTOs() {
+        return billDetailDTOs;
+    }
+
+    public void setBillDetailDTOs(Set<BillDetailDTO> billDetailDTOs) {
+        this.billDetailDTOs = billDetailDTOs;
     }
 }

@@ -74,4 +74,11 @@ public class MyUserService implements UserDetailsService {
         myUserRepository.save(myUser);
         return myUser;
     }
+
+    public Optional<String> findEmailByPatientId(Long patientId){
+        return myUserRepository.findEmailByPatientId(patientId);
+    }
+    public Optional<String> findEmailByDoctorId(Long doctorId){
+        return myUserRepository.findEmailByDoctorId(doctorId);
+    }
 }

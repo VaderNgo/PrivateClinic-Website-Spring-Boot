@@ -25,7 +25,10 @@
                     <a href="/admin/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                 </li>
                 <li th:class="${active == 'medicines'} ? 'active' : ''">
-                    <a href="/admin/medicines"><i class="fa fa-medkit"></i> <span>Medicines</span></a>
+                    <a href="/admin/medicines"><i class="fa fa-pills"></i> <span>Medicines</span></a>
+                </li>
+                <li th:class="${active == 'bills'} ? 'active' : ''">
+                    <a href="/admin/bills"><i class="fa fa-file-invoice-dollar"></i> <span>Bills</span></a>
                 </li>
             </ul>
             <ul th:case="'DOCTOR'">

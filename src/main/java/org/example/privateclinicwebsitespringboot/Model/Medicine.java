@@ -8,7 +8,9 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "Medicines")
+@Table(name = "Medicines", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"})
+})
 public class Medicine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,7 @@ public class Medicine {
     @CreatedDate
     private LocalDate createdAt = LocalDate.now();
 
-    public Medicine(){
+    public Medicine() {
 
     }
 

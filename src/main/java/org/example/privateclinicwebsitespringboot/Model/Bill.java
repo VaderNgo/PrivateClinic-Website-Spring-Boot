@@ -36,6 +36,7 @@ public class Bill {
     private Set<BillDetail> billDetailSet = new HashSet<>();
 
     private Float totalMoney = 0.0f;
+    private String status = "Pending";
 
     @CreatedDate
     private LocalDate createdAt = LocalDate.now();
@@ -113,5 +114,13 @@ public class Bill {
             totalMoney += detail.getPrice();
         }
         return totalMoney;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

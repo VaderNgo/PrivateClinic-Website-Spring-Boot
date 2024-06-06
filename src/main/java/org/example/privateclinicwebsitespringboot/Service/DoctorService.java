@@ -31,4 +31,5 @@ public class DoctorService {
     public Doctor getDoctorById(Long doctorId) {
         return doctorRepository.findById(doctorId).get();
     }
+
 }

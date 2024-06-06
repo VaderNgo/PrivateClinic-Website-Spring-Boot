@@ -33,7 +33,7 @@ public class DoctorController {
     private MedicineService medicineService;
 
     @GetMapping("/dashboard")
-    public ModelAndView userDashboard() {
+    public ModelAndView doctorDashboard() {
         ModelAndView mav = new ModelAndView();
         try {
             //get current logged user
@@ -63,7 +63,7 @@ public class DoctorController {
             mav.addObject("sidebar", "sidebar.html");
 
             List<DisplayAppointmentDTO> appointments = appointmentService.getDoctorTodayAppointments(myUser.getDoctor().getId());
-            List<DisplayAppointmentDTO> finishedAppointments = appointmentService.getAppointmentsByStatus("Finished");
+            List<DisplayAppointmentDTO> finishedAppointments = appointmentService.getAppointmentsByStatusForDoctor("Finished",myUser.getDoctor().getId());
             session.setAttribute("appointments", appointments);
             session.setAttribute("finishedAppointments", finishedAppointments);
         } catch (Exception e) {
