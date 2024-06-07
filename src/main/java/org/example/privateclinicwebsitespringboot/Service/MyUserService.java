@@ -81,4 +81,21 @@ public class MyUserService implements UserDetailsService {
     public Optional<String> findEmailByDoctorId(Long doctorId){
         return myUserRepository.findEmailByDoctorId(doctorId);
     }
+
+    public void updateEmailForPatient(String email, Long patientId){
+        MyUser myUser = myUserRepository.findByPatientId(patientId).get();
+        myUser.setEmail(email);
+        myUserRepository.save(myUser);
+    }
+
+    public void updateEmailForDoctor(String email, Long doctorId){
+        MyUser myUser = myUserRepository.findByDoctorId(doctorId).get();
+        myUser.setEmail(email);
+        myUserRepository.save(myUser);
+    }
+
+
+    public MyUser findByEmail(String email){
+        return myUserRepository.getMyUserByEmail(email);
+    }
 }

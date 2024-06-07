@@ -95,7 +95,7 @@
                                     onclick="openModal(this)">
                                     <td th:text="${billDisplay.getBill().getId()}"></td>
                                     <td th:text="${billDisplay.getDate()}"></td>
-                                    <td th:text="${billDisplay.getBill().getTotalMoney() + ' VND'}"></td>
+                                    <td th:text="${billDisplay.getBill().getTotalMoney() + ' $'}"></td>
                                     <td th:text="${billDisplay.getBill().getStatus()}"></td>
                                     <td th:text="${billDisplay.getBill().getCreatedAt()}"></td>
                                 </tr>
@@ -190,22 +190,22 @@
                             <tr>
                                 <th scope="row" th:text="${stat.index + 1}"></th>
                                 <td th:text="${detail.getMedicine().getName()}"></td>
-                                <td th:text="${detail.getMedicine().getPricePerUnit() + ' VND /' + detail.getMedicine().getUnit()}"></td>
+                                <td th:text="${detail.getMedicine().getPricePerUnit() + ' $ /' + detail.getMedicine().getUnit()}"></td>
                                 <td th:text="${detail.getBillDetail().getQuantity() + ' ' + detail.getMedicine().getUnit()}"></td>
-                                <td th:text="${detail.getBillDetail().getQuantity() * detail.getMedicine().getPricePerUnit() + ' VND'}" class="text-right"></td>
+                                <td th:text="${detail.getBillDetail().getQuantity() * detail.getMedicine().getPricePerUnit() + ' $'}" class="text-right"></td>
                             </tr>
                             <!-- end tr -->
                             </tbody><!-- end tbody -->
                             <tr>
                                 <th scope="row" colspan="4" class="text-right">Sub Total</th>
-                                <td class="text-right" th:text="${billDisplay.getBill().getTotalMoney() + ' VND'}"></td>
+                                <td class="text-right" th:text="${billDisplay.getBill().getTotalMoney() + ' $'}"></td>
                             </tr>
                             <!-- end tr -->
                             <tr>
                                 <th scope="row" colspan="4" class="border-0 text-right">
                                     Discount :
                                 </th>
-                                <td class="border-0 text-right">- 0 VND</td>
+                                <td class="border-0 text-right">- 0 $</td>
                             </tr>
                             <!-- end tr -->
                             <tr>
@@ -241,12 +241,12 @@
         var id = row.getAttribute('data-id');
         var modal = new bootstrap.Modal(document.getElementById('BILL' + id));
 
-        var totalMoney = parseFloat(row.cells[2].textContent.replace(' VND', '').replace(',', ''));
+        var totalMoney = parseFloat(row.cells[2].textContent.replace(' $', '').replace(',', ''));
         var vat = totalMoney * 0.2;
         var total = totalMoney + vat;
 
-        document.getElementById('vat' + id).textContent = vat.toFixed(2) + ' VND';
-        document.getElementById('total' + id).textContent = total.toFixed(2) + ' VND';
+        document.getElementById('vat' + id).textContent = vat.toFixed(2) + ' $';
+        document.getElementById('total' + id).textContent = total.toFixed(2) + ' $';
         modal.show();
     }
 </script>

@@ -21,4 +21,11 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     @Query("SELECT b FROM Bill b WHERE b.patient.id = :patientId")
     List<Bill> findByPatientId(@Param("patientId") Long patientId);
 
+    @Query("select sum(b.totalMoney) from Bill b")
+    float totalMoney();
+
+    @Modifying
+    @Transactional
+    @Query("delete from Bill b where b.patient.id = :patientId")
+    void deleteByPatientId(@Param("patientId") Long patientId);
 }

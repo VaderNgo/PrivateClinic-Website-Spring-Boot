@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/static/css/font_awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/custom.css}">
+    <style>
+        .table-responsive {
+            max-height: 200px; /* Adjust height as needed */
+            overflow-y: auto;
+        }
+
+        .table td, .table th {
+            max-width: 150px; /* Adjust width as needed */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        textarea {
+            width: 100%;
+            resize: none;
+        }
+
+        .table-bordered > thead > tr > th {
+            border: 1px solid black;
+        }
+
+        .table .table-bordered > tbody > tr > th {
+            border: 1px solid black;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .card.slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideRightToLeft {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .toast.show.slide-right-to-left {
+            animation: slideRightToLeft 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+<div class="main-wrapper">
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${header}" th:replace="${header} :: header(${user})"></div>
+        <div th:if="${sidebar}" th:replace="${sidebar} :: sidebar(${active},${user})"></div>
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="card slide-in">
+                    <div class="card-header">
+                        <h4 class="card-title d-inline-block">Patients</h4>
+                    </div>
+                    <div class="card-block">
+                        <div class="table-responsive">
+                            <table class="table mb-0 new-patient-table">
+                                <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Created At</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="patientDisplay, stat : ${patientDisplayDTOS}">
+                                    <td>
+                                        <a class="avatar"><i class="fa fa-user"></i></a>
+                                        <h2 th:text="${patientDisplay.getPatient().getFullName()}"></h2>
+                                    </td>
+                                    <td th:text="${patientDisplay.getEmail()}"></td>
+                                    <td th:text="${patientDisplay.getPatient().getAddress()}"></td>
+                                    <td th:text="${patientDisplay.getPatient().getCreatedAt()}"></td>
+                                    <td class="float-right">
+                                        <button type="button" class="btn btn-primary btn-primary-two btn-sm" onclick="openUpdateModal(this)"
+                                                th:data-id="${patientDisplay.getPatient().getId()}"
+                                                th:data-name="${patientDisplay.getPatient().getFullName()}"
+                                                th:data-email="${patientDisplay.getEmail()}"
+                                                th:data-address="${patientDisplay.getPatient().getAddress()}">
+                                            Update
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #dc3545">
+                <h5 class="modal-title text-white" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this patient?</p>
+                <form th:action="@{/admin/patients/delete}" method="post" id="deleteForm">
+                    <input type="hidden" name="patientId" id="deletePatientId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="deleteForm" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Patient Modal -->
+<div class="modal fade" id="updatePatientModal" tabindex="-1" aria-labelledby="updatePatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #007bff">
+                <h5 class="modal-title text-white" id="updatePatientModalLabel">Update Patient</h5>
+                <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/admin/patients/update}" th:object="${updatePatientDTO}" method="POST" id="updateForm">
+                    <input type="hidden" name="patientId" id="updatePatientId" th:field="*{id}">
+                    <div class="form-group">
+                        <label for="updatePatientName">Full Name</label>
+                        <input type="text" class="form-control" th:field="*{fullName}" id="updatePatientName" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updatePatientEmail">Email</label>
+                        <input type="email" class="form-control" id="updatePatientEmail" th:field="*{email}" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updatePatientAddress">Address</label>
+                        <textarea class="form-control" th:field="*{address}" id="updatePatientAddress" name="address" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="updateForm" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar-overlay" data-reff=""></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"></script>
+<script th:src="@{/static/js/jquery.slimscroll.js}"></script>
+<script th:src="@{/static/js/select2.min.js}"></script>
+<script th:src="@{/static/js/moment.min.js}"></script>
+<script th:src="@{/static/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/static/js/app.js}"></script>
+<script>
+    function openDeleteModal(event, button) {
+        event.stopPropagation(); // Prevent the row click event from firing
+        var patientId = button.getAttribute('data-id');
+        document.getElementById('deletePatientId').value = patientId;
+        $('#confirmDeleteModal').modal('show');
+    }
+
+    function openUpdateModal(button) {
+        var patientId = button.getAttribute('data-id');
+        var patientName = button.getAttribute('data-name');
+        var patientEmail = button.getAttribute('data-email');
+        var patientAddress = button.getAttribute('data-address');
+
+        document.getElementById('updatePatientId').value = patientId;
+        document.getElementById('updatePatientName').value = patientName;
+        document.getElementById('updatePatientEmail').value = patientEmail;
+        document.getElementById('updatePatientAddress').value = patientAddress;
+
+        $('#updatePatientModal').modal('show');
+    }
+</script>
+</body>
+</html>

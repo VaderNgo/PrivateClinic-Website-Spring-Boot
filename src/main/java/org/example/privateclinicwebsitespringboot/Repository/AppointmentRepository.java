@@ -1,5 +1,6 @@
 package org.example.privateclinicwebsitespringboot.Repository;
 
+import jakarta.transaction.Transactional;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,8 +18,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment a WHERE a.patient.id =:id")
     List<Appointment>findMyAppointments(@Param(value = "id") Long id);
-
-
     @Query("SELECT a FROM Appointment a WHERE (a.status = 'Pending' OR a.status = 'Accepted')")
     List<Appointment> findAppointmentsNotDenied();
 
@@ -30,4 +29,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment a WHERE a.status = :status AND a.doctor.id = :doctorId")
     List<Appointment> findAppointmentsByStatusForDoctor(@Param(value = "status") String status,@Param(value = "doctorId") Long doctorId);
+
+    @Modifying
+    @Transactional
+    @Query("delete from Appointment a where a.patient.id = :patientId")
+    void deleteByPatientId(@Param(value = "patientId") Long patientId);
 }

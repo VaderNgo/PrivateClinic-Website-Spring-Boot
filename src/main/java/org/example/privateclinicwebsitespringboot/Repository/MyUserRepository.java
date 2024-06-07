@@ -20,4 +20,11 @@ public interface MyUserRepository extends JpaRepository <MyUser,Long>{
 
     @Query("SELECT u.email FROM MyUser u WHERE u.doctor.id = :doctorId")
     Optional<String> findEmailByDoctorId(Long doctorId);
+
+    @Query("SELECT u FROM MyUser u WHERE u.patient.id = :patientId")
+    Optional<MyUser> findByPatientId(Long patientId);
+
+    @Query("SELECT u FROM MyUser u WHERE u.doctor.id = :doctorId")
+    Optional<MyUser> findByDoctorId(Long doctorId);
+    MyUser getMyUserByEmail(String email);
 }

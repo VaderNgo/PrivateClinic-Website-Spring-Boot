@@ -32,22 +32,28 @@
                     </div>
                 </div>
                 <div class="row doctor-grid">
-                    <div class="col-md-4 col-sm-4  col-lg-3" th:each="doctor, iterStat :${session.doctors}">
+                    <div class="col-md-4 col-sm-4  col-lg-3" th:each="doctorDisplay, iterStat :${doctorDisplayDTOS}">
                         <div class="profile-widget">
                             <div class="doctor-img">
-                                <a class="avatar"><img alt="" th:src="@{/static/assets/img/doctor-thumb-03.jpg}"></a>
+                                <a class="avatar"><img alt="" th:src="@{/static/assets/img/doctor-thumb-01.jpg}"></a>
                             </div>
                             <div class="dropdown profile-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="edit-doctor.html"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_doctor"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                    <a class="dropdown-item" th:onclick="'openUpdateModal('+${doctorDisplay.getDoctor().getId()}+')'"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#delete_doctor"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                 </div>
                             </div>
-                            <h4 class="doctor-name text-ellipsis" th:text="${doctor.fullName}"></h4>
-                            <div class="doc-prof" th:text="${doctor.specialty}"></div>
+                            <h4 class="doctor-name text-ellipsis" style="display: none" th:id="${'doctorId'+ doctorDisplay.getDoctor().getId()}" th:text="${doctorDisplay.getDoctor().getId()}"></h4>
+                            <h4 class="doctor-name text-ellipsis" th:id="${'doctorName'+ doctorDisplay.getDoctor().getId()}" th:text="${doctorDisplay.getDoctor().getFullName()}"></h4>
+                            <h4 class="doctor-name text-ellipsis" style="display: none" th:id="${'doctorEmail'+ doctorDisplay.getDoctor().getId()}" th:text="${doctorDisplay.getEmail()}"></h4>
+                            <h4 class="doctor-name text-ellipsis" style="display: none" th:id="${'doctorAddress'+ doctorDisplay.getDoctor().getId()}" th:text="${doctorDisplay.getDoctor().getAddress()}"></h4>
+                            <div class="doc-prof" th:id="${'doctorSpecialty' + doctorDisplay.getDoctor().getId()}" th:text="${doctorDisplay.getDoctor().getSpecialty    ()}"></div>
                             <div class="user-country">
-                                <i class="fa fa-map-marker"></i>
+                                <span>
+                                    <i class="fa fa-map-marker"></i>
+                                    <span th:text="${doctorDisplay.getDoctor().getAddress()}"></span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -120,6 +126,43 @@
     </div>
 </div>
 
+<div class="modal fade" id="updateDoctorModal" tabindex="-1" aria-labelledby="updateDoctorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #007bff">
+                <h5 class="modal-title text-white" id="updateDoctorModalLabel">Update Doctor</h5>
+                <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/admin/doctors/update}" th:object="${updateDoctorDTO}" method="POST" id="updateForm">
+                    <input type="hidden" name="doctorId" id="updateDoctorId" th:field="*{id}">
+                    <div class="form-group">
+                        <label for="updateDoctorName">Full Name</label>
+                        <input type="text" class="form-control" th:field="*{fullName}" id="updateDoctorName" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateDoctorEmail">Email</label>
+                        <input type="email" class="form-control" id="updateDoctorEmail" th:field="*{email}" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updateDoctorSpecialty">Specialty</label>
+                        <input type="text" class="form-control" id="updateDoctorSpecialty" th:field="*{specialty}" name="specialty" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateDoctorAddress">Address</label>
+                        <textarea class="form-control" th:field="*{address}" id="updateDoctorAddress" name="address" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="updateForm" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="sidebar-overlay" data-reff=""></div>
 <script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
 <script th:src="@{/static/js/popper.min.js}"></script>
@@ -129,5 +172,22 @@
 <script th:src="@{/static/js/moment.min.js}"></script>
 <script th:src="@{/static/js/bootstrap-datetimepicker.min.js}"></script>
 <script th:src="@{/static/js/app.js}"></script>
+<script>
+    function openUpdateModal(id) {
+        var doctorId = document.getElementById('doctorId' + id).textContent;
+        var doctorName = document.getElementById('doctorName' + id).textContent;
+        var doctorSpecialty = document.getElementById('doctorSpecialty' + id).textContent;
+        var doctorEmail = document.getElementById('doctorEmail' + id).textContent;
+        var doctorAddress = document.getElementById('doctorAddress' + id).textContent;
+
+        document.getElementById('updateDoctorId').value = doctorId;
+        document.getElementById('updateDoctorName').value = doctorName;
+        document.getElementById('updateDoctorEmail').value = doctorEmail;
+        document.getElementById('updateDoctorSpecialty').value = doctorSpecialty;
+        document.getElementById('updateDoctorAddress').value = doctorAddress;
+
+        $('#updateDoctorModal').modal('show');
+    }
+</script>
 </body>
 </html>

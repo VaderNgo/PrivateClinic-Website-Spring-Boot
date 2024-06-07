@@ -58,4 +58,15 @@ public class BillService {
         bill.setStatus("Not Paid");
         billRepository.save(bill);
     }
+
+    public int countBill(){
+        return billRepository.findAll().size();
+    }
+    public float totalMoney(){
+        return billRepository.totalMoney();
+    }
+
+    public void deleteAllByPatientId(Long patientId){
+        billRepository.deleteByPatientId(patientId);
+    }
 }

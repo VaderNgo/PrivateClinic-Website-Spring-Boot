@@ -31,6 +31,8 @@ public class AdminController {
     private BillDetailService billDetailService;
     @Autowired
     private  BillService billService;
+    @Autowired
+    private PatientService patientService;
 
     @GetMapping("/dashboard")
     public ModelAndView adminDashboard() {
@@ -43,7 +45,17 @@ public class AdminController {
             mav.setViewName("admin-dashboard");
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
-            mav.addObject("content", "content.html");
+
+            mav.addObject("totalDoctor", doctorService.countDoctor());
+            mav.addObject("totalPatient", patientService.countPatient());
+            mav.addObject("totalMedicine", medicineService.countMedicine());
+            mav.addObject("totalAppointment", appointmentService.countAppointment());
+            mav.addObject("totalBill", billService.countBill());
+            mav.addObject("totalMoney", billService.totalMoney());
+            mav.addObject("appointments", appointmentService.getAllAppointments());
+            mav.addObject("doctors",doctorService.getAllDoctors());
+            mav.addObject("patients",patientService.getAllPatients());
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -126,8 +138,14 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
             mav.addObject("doctorAccountDTO", new DoctorAccountDTO());
+            List<DoctorDisplayDTO> doctorDisplayDTOS = new ArrayList<>();
             List<Doctor> doctors = doctorService.getAllDoctors();
-            session.setAttribute("doctors", doctors);
+            for (Doctor doctor : doctors) {
+                String email = myUserService.findEmailByDoctorId(doctor.getId()).get();
+                doctorDisplayDTOS.add(new DoctorDisplayDTO(doctor, email));
+            }
+            mav.addObject("doctorDisplayDTOS", doctorDisplayDTOS);
+            mav.addObject("updateDoctorDTO", new UpdateDoctorDTO());
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -279,6 +297,76 @@ public class AdminController {
             System.out.println(e);
         }
         mav.setViewName("redirect:/admin/bills");
+        return mav;
+    }
+
+    @GetMapping("/patients")
+    public ModelAndView adminPatients() {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "patients");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+            List<PatientDisplayDTO> patientDisplayDTOS = new ArrayList<>();
+            List<Patient> patients = patientService.getAllPatients();
+            for(Patient patient : patients){
+                String email = myUserService.findEmailByPatientId(patient.getId()).get();
+                patientDisplayDTOS.add(new PatientDisplayDTO(email,patient));
+            }
+            mav.addObject("patientDisplayDTOS",patientDisplayDTOS);
+            mav.addObject("updatePatientDTO", new UpdatePatientDTO());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("admin-patient");
+        return mav;
+    }
+    @PostMapping("/patients/delete")
+    public ModelAndView adminPatientsDelete(@RequestParam("patientId") Long patientId) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "patients");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+//            billService.deleteAllByPatientId(patientId);
+//            appointmentService.deleteAllByPatientId(patientId);
+//            patientService.deletePatient(patientId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/patients");
+        return mav;
+    }
+
+    @PostMapping("/patients/update")
+    public ModelAndView adminPatientsUpdate(@ModelAttribute("UpdatePatientDTO") UpdatePatientDTO updatePatientDTO) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            patientService.updatePatient(updatePatientDTO);
+            myUserService.updateEmailForPatient(updatePatientDTO.getEmail(), updatePatientDTO.getId());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/patients");
+        return mav;
+    }
+
+    @PostMapping("/doctors/update")
+    public ModelAndView adminDoctorsUpdate(@ModelAttribute("UpdateDoctorDTO") UpdateDoctorDTO updateDoctorDTO) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            doctorService.updateDoctor(updateDoctorDTO);
+            myUserService.updateEmailForDoctor(updateDoctorDTO.getEmail(), updateDoctorDTO.getId());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/doctors");
         return mav;
     }
 }

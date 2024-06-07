@@ -3,6 +3,7 @@ package org.example.privateclinicwebsitespringboot.Service;
 import org.example.privateclinicwebsitespringboot.DTO.DoctorAccountDTO;
 import org.example.privateclinicwebsitespringboot.DTO.DoctorDTO;
 import org.example.privateclinicwebsitespringboot.DTO.SignUpDTO;
+import org.example.privateclinicwebsitespringboot.DTO.UpdateDoctorDTO;
 import org.example.privateclinicwebsitespringboot.Model.Doctor;
 import org.example.privateclinicwebsitespringboot.Repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class DoctorService {
         doctor.setFullName(doctorAccountDTO.getFullName());
         doctor.setBirth(doctorAccountDTO.getBirth());
         doctor.setAddress(doctorAccountDTO.getAddress());
+        doctor.setSpecialty(doctorAccountDTO.getSpecialty());
         doctorRepository.save(doctor);
         return doctor;
     }
@@ -32,4 +34,15 @@ public class DoctorService {
         return doctorRepository.findById(doctorId).get();
     }
 
+    public int countDoctor(){
+        return doctorRepository.findAll().size();
+    }
+
+    public void updateDoctor(UpdateDoctorDTO updateDoctorDTO){
+        Doctor doctor = doctorRepository.findById(updateDoctorDTO.getId()).get();
+        doctor.setFullName(updateDoctorDTO.getFullName());
+        doctor.setAddress(updateDoctorDTO.getAddress());
+        doctor.setSpecialty(updateDoctorDTO.getSpecialty());
+        doctorRepository.save(doctor);
+    }
 }

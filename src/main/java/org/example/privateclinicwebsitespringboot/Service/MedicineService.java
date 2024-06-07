@@ -26,4 +26,8 @@ public class MedicineService {
     public Medicine getMedicineByName(String name) {
         return medicineRepository.findByName(name);
     }
+
+    public int countMedicine(){
+        return medicineRepository.findAll().size();
+    }
 }
