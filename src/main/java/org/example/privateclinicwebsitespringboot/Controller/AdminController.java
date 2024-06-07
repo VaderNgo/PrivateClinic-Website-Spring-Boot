@@ -245,4 +245,40 @@ public class AdminController {
         mav.setViewName("admin-bill");
         return mav;
     }
+
+    @PostMapping("/bills/delete")
+    public ModelAndView adminBillsDelete(@RequestParam("billId") Long billId) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "bills");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+            billService.deleteBillById(billId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/bills");
+        return mav;
+    }
+
+    @PostMapping("/bills/send")
+    public ModelAndView adminBillsSend(@RequestParam("billId") Long billId) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "bills");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+            billService.sendBillToUser(billId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/bills");
+        return mav;
+    }
 }

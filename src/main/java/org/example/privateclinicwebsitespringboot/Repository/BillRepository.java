@@ -20,4 +20,5 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 
     @Query("SELECT b FROM Bill b WHERE b.patient.id = :patientId")
     List<Bill> findByPatientId(@Param("patientId") Long patientId);
+
 }

@@ -188,14 +188,12 @@
                             </thead><!-- end thead -->
                             <tbody th:each="detail, stat: ${billDisplay.getBillDetailDTOs()}">
                             <tr>
-                                <th scope="row" th:text="${detail.getBillDetail().getMedicineName()}"></th>
+                                <th scope="row" th:text="${stat.index + 1}"></th>
                                 <td th:text="${detail.getMedicine().getName()}"></td>
                                 <td th:text="${detail.getMedicine().getPricePerUnit() + ' VND /' + detail.getMedicine().getUnit()}"></td>
                                 <td th:text="${detail.getBillDetail().getQuantity() + ' ' + detail.getMedicine().getUnit()}"></td>
                                 <td th:text="${detail.getBillDetail().getQuantity() * detail.getMedicine().getPricePerUnit() + ' VND'}" class="text-right"></td>
                             </tr>
-                            <!-- end tr -->
-
                             <!-- end tr -->
                             </tbody><!-- end tbody -->
                             <tr>
@@ -227,7 +225,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success mr-1"><i class="fa fa-print"></i> Print</button>
+                <button type="button" onclick="window.print()" class="btn btn-success mr-1"><i class="fa fa-print"></i> Print</button>
             </div>
         </div>
     </div>

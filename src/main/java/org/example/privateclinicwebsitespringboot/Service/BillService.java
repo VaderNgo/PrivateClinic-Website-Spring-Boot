@@ -49,4 +49,13 @@ public class BillService {
         return billRepository.findByAppointmentId(appointmentId);
     }
 
+    public void deleteBillById(Long id){
+        billRepository.deleteById(id);
+    }
+
+    public void sendBillToUser(Long billId){
+        Bill bill = getBillById(billId);
+        bill.setStatus("Not Paid");
+        billRepository.save(bill);
+    }
 }
