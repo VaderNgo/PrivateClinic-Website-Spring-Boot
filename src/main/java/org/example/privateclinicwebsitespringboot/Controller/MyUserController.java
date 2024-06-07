@@ -2,12 +2,12 @@ package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.privateclinicwebsitespringboot.DTO.AppointmentDTO;
+import org.example.privateclinicwebsitespringboot.DTO.BillDetailDTO;
+import org.example.privateclinicwebsitespringboot.DTO.BillDisplayDTO;
 import org.example.privateclinicwebsitespringboot.DTO.DisplayAppointmentDTO;
 import org.example.privateclinicwebsitespringboot.Handler.MessageHandler;
-import org.example.privateclinicwebsitespringboot.Model.Appointment;
-import org.example.privateclinicwebsitespringboot.Model.MyUser;
-import org.example.privateclinicwebsitespringboot.Service.AppointmentService;
-import org.example.privateclinicwebsitespringboot.Service.MyUserService;
+import org.example.privateclinicwebsitespringboot.Model.*;
+import org.example.privateclinicwebsitespringboot.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/user")
@@ -27,6 +30,12 @@ public class MyUserController {
     private MyUserService myUserService;
     @Autowired
     private AppointmentService appointmentService;
+    @Autowired
+    private BillService billService;
+    @Autowired
+    private BillDetailService billDetailService;
+    @Autowired
+    private MedicineService medicineService;
     @GetMapping("/dashboard")
     public ModelAndView userDashboard(){
         ModelAndView mav = new ModelAndView();
@@ -96,6 +105,39 @@ public class MyUserController {
         }
         session.setAttribute("message",messageHandler);
         mav.setViewName("redirect:/user/appointments");
+        return mav;
+    }
+    @GetMapping("/bills")
+    public ModelAndView userBills() {
+        ModelAndView mav = new ModelAndView();
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "bills");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+
+            List<Bill> bills  = billService.getAllBillsByPatientId(myUser.getPatient().getId());
+            List<BillDisplayDTO> billDisplayDTOS = new ArrayList<>();
+            for(Bill bill : bills){
+                Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
+                Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
+                for(BillDetail billDetail : billDetails){
+                    Medicine medicine = medicineService.getMedicineByName(billDetail.getMedicineName());
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,medicine));
+                }
+                String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
+                String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";
+                billDisplayDTOS.add(new BillDisplayDTO(bill, patientEmail, doctorEmail, billDetailDTOS));
+            }
+
+            mav.addObject("billDisplayDTOS",billDisplayDTOS);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("user-bill");
         return mav;
     }
 }

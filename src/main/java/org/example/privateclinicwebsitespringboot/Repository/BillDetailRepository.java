@@ -17,4 +17,7 @@ public interface BillDetailRepository extends JpaRepository<BillDetail, Long> {
     @Modifying
     @Query("DELETE FROM BillDetail bd WHERE bd.bill.id = :billId")
     void deleteBillDetailById(@Param(value = "billId") Long billId);
+
+    @Query("SELECT bd FROM BillDetail bd WHERE bd.bill.patient.id = :patientId")
+    Set<BillDetail> findByPatientId(@Param(value = "patientId") Long patientId);
 }

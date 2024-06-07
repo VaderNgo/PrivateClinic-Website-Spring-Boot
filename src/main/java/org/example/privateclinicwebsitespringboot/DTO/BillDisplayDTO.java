@@ -3,6 +3,7 @@ package org.example.privateclinicwebsitespringboot.DTO;
 import org.example.privateclinicwebsitespringboot.Model.Bill;
 import org.example.privateclinicwebsitespringboot.Model.BillDetail;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 public class BillDisplayDTO {
@@ -11,6 +12,7 @@ public class BillDisplayDTO {
     private String doctorEmail;
 
     private Set<BillDetailDTO> billDetailDTOs;
+    private String date;
 
     public BillDisplayDTO() {
     }
@@ -19,6 +21,8 @@ public class BillDisplayDTO {
         this.patientEmail = patientEmail;
         this.doctorEmail = doctorEmail;
         this.billDetailDTOs = billDetailDTOs;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
+        this.date = this.bill.getAppointment().getDate().format(formatter);
     }
 
     public Bill getBill() {
@@ -51,5 +55,13 @@ public class BillDisplayDTO {
 
     public void setBillDetailDTOs(Set<BillDetailDTO> billDetailDTOs) {
         this.billDetailDTOs = billDetailDTOs;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

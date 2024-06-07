@@ -33,4 +33,8 @@ public class BillDetailService {
     public Set<BillDetail> getBillDetailByBillId(Long billId){
         return billDetailRepository.findByBillId(billId);
     }
+
+    public Set<BillDetail> getBillDetailByPatientID(Long patientId){
+        return billDetailRepository.findByPatientId(patientId);
+    }
 }

@@ -32,6 +32,9 @@ public class BillService {
     public List<Bill> getAllBills(){
         return billRepository.findAll();
     }
+    public List<Bill> getAllBillsByPatientId(Long patientId){
+        return billRepository.findByPatientId(patientId);
+    }
 
     @Transactional
     public void updateTotalMoney(float totalMoney, Long billId){
@@ -45,4 +48,5 @@ public class BillService {
     public Bill getBillByAppointmentId(Long appointmentId){
         return billRepository.findByAppointmentId(appointmentId);
     }
+
 }

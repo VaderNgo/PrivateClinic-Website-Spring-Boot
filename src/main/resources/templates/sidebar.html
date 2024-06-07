@@ -12,6 +12,9 @@
                 <li th:class="${active == 'appointments'} ? 'active' : ''">
                     <a href="/user/appointments"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
                 </li>
+                <li th:class="${active == 'bills'} ? 'active' : ''">
+                    <a href="/user/bills"><i class="fa fa-file-invoice-dollar"></i> <span>Bills</span></a>
+                </li>
             </ul>
             <ul th:case="'ADMIN'">
                 <li class="menu-title">Main</li>
