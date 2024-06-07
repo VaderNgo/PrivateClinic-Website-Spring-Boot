@@ -45,4 +45,8 @@ public class DoctorService {
         doctor.setSpecialty(updateDoctorDTO.getSpecialty());
         doctorRepository.save(doctor);
     }
+
+    public void deleteDoctor(Long doctorId){
+        doctorRepository.deleteById(doctorId);
+    }
 }

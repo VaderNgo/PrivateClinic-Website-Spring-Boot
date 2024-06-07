@@ -128,7 +128,28 @@ public class AppointmentService {
         return temp;
     }
 
+    public List<DisplayAppointmentDTO> getAllUserAppointments() {
+        List<DisplayAppointmentDTO> temp = new ArrayList<>();
+        List<Appointment> appointments = appointmentRepository.findAll();
+        for (Appointment appointment : appointments) {
+            temp.add(new DisplayAppointmentDTO(appointment));
+        }
+        return temp;
+    }
+
     public void deleteAllByPatientId(Long patientId){
         appointmentRepository.deleteByPatientId(patientId);
+    }
+
+    public int countAppointmentByPatientId(Long patientId){
+        return appointmentRepository.countAppointmentByPatientId(patientId);
+    }
+
+    public int countDoctorAcceptedAppointment(Long doctor){
+        return appointmentRepository.countDoctorAcceptedAppointment(doctor);
+    }
+
+    public int countAppointmentByDoctorId(Long doctorId){
+        return appointmentRepository.countAppointmentByDoctorId(doctorId);
     }
 }

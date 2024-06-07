@@ -3,11 +3,13 @@ package org.example.privateclinicwebsitespringboot.Service;
 import jakarta.transaction.Transactional;
 import org.example.privateclinicwebsitespringboot.Model.Appointment;
 import org.example.privateclinicwebsitespringboot.Model.Bill;
+import org.example.privateclinicwebsitespringboot.Model.BillDetail;
 import org.example.privateclinicwebsitespringboot.Repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BillService {
@@ -34,6 +36,9 @@ public class BillService {
     }
     public List<Bill> getAllBillsByPatientId(Long patientId){
         return billRepository.findByPatientId(patientId);
+    }
+    public List<Bill> getPendingBillsByDoctorId(Long doctorId){
+        return billRepository.findPendingBillByDoctorId(doctorId);
     }
 
     @Transactional
@@ -68,5 +73,13 @@ public class BillService {
 
     public void deleteAllByPatientId(Long patientId){
         billRepository.deleteByPatientId(patientId);
+    }
+
+    public int countBillByPatientId(Long patientId){
+        return billRepository.countBillByPatientId(patientId);
+    }
+
+    public int countBillByDoctorId(Long doctorId){
+        return billRepository.countBillByDoctorId(doctorId);
     }
 }

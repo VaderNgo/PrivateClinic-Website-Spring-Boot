@@ -34,4 +34,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Transactional
     @Query("delete from Appointment a where a.patient.id = :patientId")
     void deleteByPatientId(@Param(value = "patientId") Long patientId);
+
+
+    @Query("SELECT COUNT (*) from Appointment a where a.patient.id = :patientId")
+    int countAppointmentByPatientId(@Param(value = "patientId") Long patientId);
+
+    @Query("SELECT COUNT (*) from Appointment a where a.doctor.id = :doctorId AND a.status = 'Accepted'")
+    int countDoctorAcceptedAppointment(@Param(value = "doctorId") Long doctorId);
+
+    @Query("SELECT COUNT (*) from Appointment a where a.doctor.id = :doctorId")
+    int countAppointmentByDoctorId(@Param(value = "doctorId") Long doctorId);
 }

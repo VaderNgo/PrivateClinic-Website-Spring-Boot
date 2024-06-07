@@ -37,7 +37,7 @@
                                 <p><strong>Patient Name:</strong> <span th:text="${billDTO.getPatient().getFullName()}"></span></p>
                                 <p><strong>Doctor Name:</strong> <span th:text="${billDTO.getDoctor().getFullName()}"></span></p>
                                 <p><strong>Date:</strong> <span th:text="${billDTO.getCreatedAt()  }"></span></p>
-                                <p><strong>Total Money:</strong> <span th:text="${billDTO.totalMoney} + ' VND'"></span></p>
+                                <p><strong>Total Money:</strong> <span th:text="${billDTO.totalMoney} + ' $'"></span></p>
                                 <h5 class="mt-4">Bill Details</h5>
                                 <form id="billDetailsForm" th:action="@{/doctor/bills/updateDetails}" th:object="${billDTO}" method="post">
                                     <input type="hidden" name="billId" th:value="${billDTO.id}">

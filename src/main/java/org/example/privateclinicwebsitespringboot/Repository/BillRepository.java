@@ -21,6 +21,9 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     @Query("SELECT b FROM Bill b WHERE b.patient.id = :patientId")
     List<Bill> findByPatientId(@Param("patientId") Long patientId);
 
+    @Query("SELECT b FROM Bill b WHERE b.doctor.id = :doctorId AND b.status = 'Pending'")
+    List<Bill> findPendingBillByDoctorId(@Param("doctorId") Long doctorId);
+
     @Query("select sum(b.totalMoney) from Bill b")
     float totalMoney();
 
@@ -28,4 +31,10 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     @Transactional
     @Query("delete from Bill b where b.patient.id = :patientId")
     void deleteByPatientId(@Param("patientId") Long patientId);
+
+    @Query("SELECT COUNT(*) from Bill b where b.patient.id = :patientId")
+    int countBillByPatientId(@Param("patientId") Long patientId);
+
+    @Query("SELECT COUNT(*) from Bill b where b.doctor.id = :doctorId")
+    int countBillByDoctorId(@Param("doctorId") Long doctorId);
 }

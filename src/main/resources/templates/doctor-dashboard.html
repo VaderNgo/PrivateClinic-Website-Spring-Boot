@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/static/css/font_awesome.min.css}">
     <link rel="stylesheet" th:href="@{/static/css/custom.css}">
+    <style>
+        .table-responsive {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
 <div class="main-wrapper">
@@ -19,7 +25,116 @@
         <div th:if="${sidebar}" th:replace="${sidebar} :: sidebar(${active},${user})"></div>
         <div class="page-wrapper">
             <div class="content">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+                            <span class="dash-widget-bg1"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                            <div class="dash-widget-info text-right">
+                                <h3 th:text="${totalAppointments}"></h3>
+                                <span class="widget-title1">Total Appointments <i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                        <div class="dash-widget">
+                            <span class="dash-widget-bg2"><i class="fa fa-file-invoice-dollar" aria-hidden="true"></i></span>
+                            <div class="dash-widget-info text-right">
+                                <h3 th:text="${totalBills}"></h3>
+                                <span class="widget-title2">Bills <i class="fa fa-check" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title d-inline-block">Today Appointments</h4> <a href="/doctor/appointments" class="btn btn-primary float-right">View all</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="d-none">
+                                        <tr>
+                                            <th>Patient Name</th>
+                                            <th>Note</th>
+                                            <th>Status</th>
+                                            <th>Timing</th>
+                                            <th class="text-right">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="appointment, stat : ${myAppointments}"
 
+                                        >
+                                            <td style="min-width: 200px;">
+                                                <a class="avatar" href="#"><i class="fa fa-user"></i></a>
+                                                <h2 th:text="${appointment.getPatient().getFullName()}"><span th:text="${appointment.getPatient().getAddress()}"></span></h2>
+                                            </td>
+                                            <td style="min-width: 200px; overflow: hidden">
+                                                <p th:text="${appointment.getNote()}"></p>
+                                            </td>
+                                            <td style="min-width: 200px;">
+                                                <h5 class="time-title p-0">Date</h5>
+                                                <p th:text="${appointment.getDate()}"></p>
+                                            </td>
+                                            <td>
+                                                <span style="font-size: 12px" th:text="${appointment.getStatus()}" class="badge"
+                                                      th:classappend="${appointment.getStatus() == 'Pending' ? 'bg-warning' :
+                                                (appointment.getStatus() == 'Finished' ? 'bg-info' : (appointment.getStatus() == 'Accepted' ? 'bg-success' : 'bg-danger'))}"></span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title d-inline-block">Pending Bills</h4>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table mb-0">
+                                        <thead class="d-none">
+                                        <tr>
+                                            <th>Patient Name</th>
+                                            <th>Note</th>
+                                            <th>Status</th>
+                                            <th>Timing</th>
+                                            <th class="text-right">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="bill, stat : ${billDisplayDTOS}"
+                                        >
+                                            <th scope="row" th:text="${stat.index + 1}"></th>
+                                            <td style="min-width: 200px;">
+                                                <h5 class="time-title p-0">Date</h5>
+                                                <p th:text="${bill.getDate()}"></p>
+                                            </td>
+                                            <td style="min-width: 200px; overflow: hidden">
+                                                <h5 class="time-title p-0">Total money</h5>
+                                                <p th:text="${bill.getBill().getTotalMoney() + ' $'}"></p>
+                                            </td>
+                                            <td>
+                                                <span style="font-size: 12px" th:text="${bill.getBill().getStatus()}" class="badge"
+                                                      th:classappend="${bill.getBill().getStatus() == 'Pending' ? 'bg-warning' :
+                                                (bill.getBill().getStatus() == 'Finished' ? 'bg-light' : (bill.getBill().getStatus() == 'Paid' ? 'bg-success' : 'bg-danger'))}"></span>
+                                            </td>
+                                            <td class="text-right">
+                                                <a th:href="@{/doctor/bills(billId=${bill.getBill().getId()})}" class="btn btn-outline-primary take-btn">View</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

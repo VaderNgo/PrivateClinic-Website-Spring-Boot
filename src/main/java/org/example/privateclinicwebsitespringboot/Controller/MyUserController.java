@@ -48,7 +48,28 @@ public class MyUserController {
             mav.setViewName("user-dashboard");
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
-            mav.addObject("content","content.html");
+
+            int totalAppointments = appointmentService.countAppointmentByPatientId(myUser.getPatient().getId());
+            int totalBills = billService.countBillByPatientId(myUser.getPatient().getId());
+            List<DisplayAppointmentDTO> myAppointments = appointmentService.getMyAppointments(myUser);
+            List<Bill> bills  = billService.getAllBillsByPatientId(myUser.getPatient().getId());
+            List<BillDisplayDTO> billDisplayDTOS = new ArrayList<>();
+            for(Bill bill : bills){
+                Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
+                Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
+                for(BillDetail billDetail : billDetails){
+                    Medicine medicine = medicineService.getMedicineByName(billDetail.getMedicineName());
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,medicine));
+                }
+                String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
+                String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";
+                billDisplayDTOS.add(new BillDisplayDTO(bill, patientEmail, doctorEmail, billDetailDTOS));
+            }
+
+            mav.addObject("billDisplayDTOS",billDisplayDTOS);
+            mav.addObject("totalAppointments",totalAppointments);
+            mav.addObject("totalBills",totalBills);
+            mav.addObject("myAppointments",myAppointments);
         }
         catch(Exception e) {
             System.out.println(e);

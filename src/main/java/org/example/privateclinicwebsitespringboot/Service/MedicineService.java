@@ -1,5 +1,6 @@
 package org.example.privateclinicwebsitespringboot.Service;
 
+import org.example.privateclinicwebsitespringboot.DTO.UpdateMedicineDTO;
 import org.example.privateclinicwebsitespringboot.Model.Medicine;
 import org.example.privateclinicwebsitespringboot.Repository.MedicineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,14 @@ public class MedicineService {
 
     public int countMedicine(){
         return medicineRepository.findAll().size();
+    }
+
+    public void updateMedicine(UpdateMedicineDTO updateMedicineDTO) {
+        Medicine medicine = medicineRepository.findById(updateMedicineDTO.getId()).get();
+        medicine.setName(updateMedicineDTO.getName());
+        medicine.setPricePerUnit(updateMedicineDTO.getPricePerUnit());
+        medicine.setUnit(updateMedicineDTO.getUnit());
+        medicine.setDescription(updateMedicineDTO.getDescription());
+        medicineRepository.save(medicine);
     }
 }

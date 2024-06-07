@@ -187,6 +187,7 @@ public class AdminController {
 
             mav.addObject("medicines", medicines);
             mav.addObject("medicine", new Medicine());
+            mav.addObject("updateMedicineDTO", new UpdateMedicineDTO());
         } catch (Exception e) {
 
         }
@@ -223,6 +224,18 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
             medicineService.deleteMedicine(medicineId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/medicines");
+        return mav;
+    }
+
+    @PostMapping("/medicines/update")
+    public ModelAndView updateMedicine(@ModelAttribute("UpdateMedicineDTO") UpdateMedicineDTO updateMedicineDTO) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            medicineService.updateMedicine(updateMedicineDTO);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -363,6 +376,18 @@ public class AdminController {
         try {
             doctorService.updateDoctor(updateDoctorDTO);
             myUserService.updateEmailForDoctor(updateDoctorDTO.getEmail(), updateDoctorDTO.getId());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("redirect:/admin/doctors");
+        return mav;
+    }
+
+    @PostMapping("/doctors/delete")
+    public ModelAndView adminDoctorsDelete(@RequestParam("doctorId") Long doctorId) {
+        ModelAndView mav = new ModelAndView();
+        try {
+            doctorService.deleteDoctor(doctorId);
         } catch (Exception e) {
             System.out.println(e);
         }

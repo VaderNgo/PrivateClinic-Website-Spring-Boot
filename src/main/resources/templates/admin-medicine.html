@@ -107,7 +107,7 @@
                                     <td th:text="${medicine.getName()}"></td>
                                     <td th:text="${medicine.getDescription()}"></td>
                                     <td th:text="${medicine.getUnit()}"></td>
-                                    <td th:text="${medicine.getPricePerUnit()} + ' VND'"></td>
+                                    <td th:text="${medicine.getPricePerUnit()} + ' $'"></td>
                                     <td th:text="${medicine.getCreatedAt()}"></td>
                                 </tr>
                                 </tbody>
@@ -186,40 +186,41 @@
                 <h5 class="modal-title text-white" id="appointmentModalLabel">Medicine Details</h5>
                 <button type="button" class="fa fa-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form th:action="@{/admin/medicines/update}" method="POST" th:object="${updateMedicineDTO}">
             <div class="modal-body">
-                <form>
                     <div class="mb-3">
                         <label for="medicineId" class="form-label">ID</label>
-                        <input type="text" class="form-control" id="medicineId" readonly>
+                        <input type="text" class="form-control" id="medicineId" th:field="*{id}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="medicineName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="medicineName" readonly>
+                        <input type="text" class="form-control" id="medicineName" th:field="*{name}">
                     </div>
                     <div class="mb-3">
                         <label for="medicineDescription" class="form-label">Description</label>
-                        <textarea class="form-control" rows="3" id="medicineDescription" readonly></textarea>
+                        <textarea class="form-control" rows="3" id="medicineDescription" th:field="*{description}"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="medicineUnit" class="form-label">Unit</label>
-                        <input type="text" class="form-control" id="medicineUnit" readonly>
+                        <input type="text" class="form-control" id="medicineUnit" th:field="*{unit}">
                     </div>
                     <div class="mb-3">
-                        <label for="medicinePrice" class="form-label">Price per Unit</label>
-                        <input type="text" class="form-control" id="medicinePrice" readonly>
+                        <label for="medicinePrice" class="form-label">Price per Unit ($)</label>
+                        <input type="text" class="form-control" id="medicinePrice" th:field="*{pricePerUnit}">
                     </div>
                     <div class="mb-3">
                         <label for="medicineCreatedAt" class="form-label">Created At</label>
                         <input type="text" class="form-control" id="medicineCreatedAt" readonly>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button class="btn btn-danger" data-dismiss="modal" onclick="openDeleteModal(
 
                 )">Delete</button>
+                <button type="submit" class="btn btn-primary">Update</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -243,7 +244,7 @@
         document.getElementById('medicineName').value = row.getAttribute('data-name');
         document.getElementById('medicineDescription').value = row.getAttribute('data-description');
         document.getElementById('medicineUnit').value = row.getAttribute('data-unit');
-        document.getElementById('medicinePrice').value = row.getAttribute('data-priceperunit') + " VND";
+        document.getElementById('medicinePrice').value = row.getAttribute('data-priceperunit');
         document.getElementById('medicineCreatedAt').value = row.getAttribute('data-createdat');
 
         var modal = new bootstrap.Modal(document.getElementById('medicineDetailModal'));

@@ -117,7 +117,7 @@
                                             <td>
                                                 <span style="font-size: 12px" th:text="${appointment.getStatus()}" class="badge"
                                                       th:classappend="${appointment.getStatus() == 'Pending' ? 'bg-warning' :
-                                                (appointment.getStatus() == 'Finished' ? 'bg-light' : (appointment.getStatus() == 'Accepted' ? 'bg-success' : 'bg-danger'))}"></span>
+                                                (appointment.getStatus() == 'Finished' ? 'bg-info' : (appointment.getStatus() == 'Accepted' ? 'bg-success' : 'bg-danger'))}"></span>
                                             </td>
                                             <td class="text-right">
                                                 <a href="/admin/appointments" class="btn btn-outline-primary take-btn">Take up</a>
@@ -150,7 +150,7 @@
                                 </ul>
                             </div>
                             <div class="card-footer text-center bg-white">
-                                <a href="admin/doctors" class="text-muted">View all Doctors</a>
+                                <a href="/admin/doctors" class="text-muted">View all Doctors</a>
                             </div>
                         </div>
                     </div>
