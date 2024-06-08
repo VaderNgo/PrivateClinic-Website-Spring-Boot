@@ -20,6 +20,7 @@ public class Doctor {
     private Date birth;
     private String address;
     private String gender;
+    private int isDeleted=0;
 
     @CreatedDate
     private LocalDate createdAt = LocalDate.now();
@@ -79,5 +80,13 @@ public class Doctor {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

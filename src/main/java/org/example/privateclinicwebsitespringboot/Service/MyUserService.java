@@ -1,5 +1,6 @@
 package org.example.privateclinicwebsitespringboot.Service;
 
+import jakarta.transaction.Transactional;
 import org.example.privateclinicwebsitespringboot.DTO.DoctorAccountDTO;
 import org.example.privateclinicwebsitespringboot.DTO.SignUpDTO;
 import org.example.privateclinicwebsitespringboot.Model.Doctor;
@@ -94,6 +95,7 @@ public class MyUserService implements UserDetailsService {
         myUserRepository.save(myUser);
     }
 
+    @Transactional
     public void deleteMyUserByDoctorId(Long doctorId){
         myUserRepository.deleteMyUserByDoctorId(doctorId);
     }

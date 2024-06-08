@@ -427,8 +427,9 @@ public class AdminController {
     public ModelAndView adminDoctorsDelete(@RequestParam("doctorId") Long doctorId) {
         ModelAndView mav = new ModelAndView();
         try {
-            myUserService.deleteMyUserByDoctorId(doctorId);
-            doctorService.deleteDoctor(doctorId);
+            Doctor doctor = doctorService.findDoctorById(doctorId);
+            doctor.setIsDeleted(1);
+            doctorService.saveDoctor(doctor);
         } catch (Exception e) {
             System.out.println(e);
         }

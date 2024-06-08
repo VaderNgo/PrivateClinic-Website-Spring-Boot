@@ -28,7 +28,7 @@ public class DoctorService {
     }
 
     public List<Doctor> getAllDoctors(){
-        return doctorRepository.findAll();
+        return doctorRepository.findAllNotDeleted();
     }
 
     public Doctor getDoctorById(Long doctorId) {
@@ -36,7 +36,7 @@ public class DoctorService {
     }
 
     public int countDoctor(){
-        return doctorRepository.findAll().size();
+        return doctorRepository.findAllNotDeleted().size();
     }
 
     public void updateDoctor(UpdateDoctorDTO updateDoctorDTO){
@@ -50,5 +50,13 @@ public class DoctorService {
 
     public void deleteDoctor(Long doctorId){
         doctorRepository.deleteById(doctorId);
+    }
+
+    public Doctor findDoctorById(Long doctorId){
+        return doctorRepository.findById(doctorId).get();
+    }
+
+    public void saveDoctor(Doctor doctor){
+        doctorRepository.save(doctor);
     }
 }
