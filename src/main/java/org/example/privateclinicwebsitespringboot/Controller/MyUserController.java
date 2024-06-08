@@ -88,7 +88,6 @@ public class MyUserController {
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
             mav.addObject("appointmentDTO",new AppointmentDTO());
-            mav.addObject("appointment",appointment);
             List<DisplayAppointmentDTO> myAppointments = appointmentService.getMyAppointments(myUser);
             session.setAttribute("myAppointments",myAppointments);
         }catch (Exception e){
@@ -110,7 +109,6 @@ public class MyUserController {
             mav.addObject("header","header.html");
             mav.addObject("sidebar","sidebar.html");
 
-            mav.addObject("appointmentDTO",appointmentDTO);
             if(!appointmentService.isDateNotPicked(appointmentDTO)){
                 messageHandler = new MessageHandler("danger","This date already picked!");
                 redirectAttributes.addFlashAttribute("message",messageHandler);
@@ -124,8 +122,8 @@ public class MyUserController {
             System.out.println(e);
             messageHandler = new MessageHandler("danger","Failed to add appointment");
         }
-        mav.addObject("message",messageHandler);
-        mav.setViewName("redirect:/user/appointments?added");
+        redirectAttributes.addFlashAttribute("message",messageHandler);
+        mav.setViewName("redirect:/user/appointments");
         return mav;
     }
     @GetMapping("/bills")
