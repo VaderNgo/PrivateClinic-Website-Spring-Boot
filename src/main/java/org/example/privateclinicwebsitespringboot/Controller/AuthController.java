@@ -76,7 +76,7 @@ public class AuthController {
             mav.setViewName("redirect:/signin");
         }
         catch(Exception e){
-            messageHandler = new MessageHandler("danger",e.getMessage());
+            messageHandler = new MessageHandler("danger","Username or Email already exists");
             redirectAttributes.addFlashAttribute("message",messageHandler);
             mav.setViewName("redirect:/signup");
         }

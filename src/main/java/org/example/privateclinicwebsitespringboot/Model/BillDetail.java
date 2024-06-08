@@ -20,7 +20,11 @@ public class BillDetail {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="bill_id", nullable=true)
     private Bill bill;
-    private String medicineName;
+
+    @OneToOne(cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(name = "medicine_id",nullable = true)
+    private Medicine medicine;
+
     private Float price;
     private Integer quantity;
 
@@ -46,12 +50,12 @@ public class BillDetail {
         this.bill = bill;
     }
 
-    public String getMedicineName() {
-        return medicineName;
+    public Medicine getMedicine() {
+        return medicine;
     }
 
-    public void setMedicineName(String medicineName) {
-        this.medicineName = medicineName;
+    public void setMedicine(Medicine medicine) {
+        this.medicine = medicine;
     }
 
     public Float getPrice() {

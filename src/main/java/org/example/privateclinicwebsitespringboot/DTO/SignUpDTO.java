@@ -13,6 +13,7 @@ public class SignUpDTO {
     private String fullName;
     private Date birth;
     private String address;
+    private String gender;
 
     public SignUpDTO(){}
 
@@ -62,5 +63,13 @@ public class SignUpDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

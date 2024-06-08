@@ -29,4 +29,5 @@ public interface MyUserRepository extends JpaRepository <MyUser,Long>{
     @Query("SELECT u FROM MyUser u WHERE u.doctor.id = :doctorId")
     Optional<MyUser> findByDoctorId(Long doctorId);
     MyUser getMyUserByEmail(String email);
+
 }

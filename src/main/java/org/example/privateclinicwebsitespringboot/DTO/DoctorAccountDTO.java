@@ -11,6 +11,7 @@ public class DoctorAccountDTO {
     private String address;
     private Date birth;
     private String specialty;
+    private String gender;
 
     public DoctorAccountDTO(){}
 
@@ -76,5 +77,13 @@ public class DoctorAccountDTO {
 
     public void setSpecialty(String specialty) {
         this.specialty = specialty;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

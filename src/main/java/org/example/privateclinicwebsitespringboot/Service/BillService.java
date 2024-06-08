@@ -40,6 +40,9 @@ public class BillService {
     public List<Bill> getPendingBillsByDoctorId(Long doctorId){
         return billRepository.findPendingBillByDoctorId(doctorId);
     }
+    public List<Bill> getAllBillsByDoctorId(Long doctorId){
+        return billRepository.findByDoctorId(doctorId);
+    }
 
     @Transactional
     public void updateTotalMoney(float totalMoney, Long billId){

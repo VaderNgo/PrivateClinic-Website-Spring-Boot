@@ -174,7 +174,6 @@ public class AdminController {
             mav.addObject("active", "doctors");
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
-            mav.addObject("doctorAccountDTO", doctorAccountDTO);
             Doctor doctor = doctorService.createDoctor(doctorAccountDTO);
             myUserService.signUpDoctor(doctorAccountDTO, passwordEncoder, doctor);
             messageHandler = new MessageHandler("success", "Doctor added successfully");
@@ -183,7 +182,7 @@ public class AdminController {
             messageHandler = new MessageHandler("danger", "Failed to add doctor");
         }
         redirectAttributes.addFlashAttribute("message", messageHandler);
-        mav.setViewName("redirect:/admin/doctors");
+        mav.setViewName("redirect:/admin/doctors?done");
         return mav;
     }
 
@@ -286,8 +285,7 @@ public class AdminController {
                 Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
                 Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
                 for(BillDetail billDetail : billDetails){
-                    Medicine medicine = medicineService.getMedicineByName(billDetail.getMedicineName());
-                    billDetailDTOS.add(new BillDetailDTO(billDetail,medicine));
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,billDetail.getMedicine()));
                 }
                 String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
                 String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";

@@ -45,6 +45,9 @@
                 <li th:class="${active == 'appointments'} ? 'active' : ''">
                     <a href="/doctor/appointments"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
                 </li>
+                <li th:class="${active == 'bills'} ? 'active' : ''">
+                    <a href="/doctor/bills-list"><i class="fa fa-file-invoice-dollar"></i> <span>Bills</span></a>
+                </li>
             </ul>
         </div>
     </div>

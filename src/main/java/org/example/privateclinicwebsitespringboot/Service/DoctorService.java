@@ -22,6 +22,7 @@ public class DoctorService {
         doctor.setBirth(doctorAccountDTO.getBirth());
         doctor.setAddress(doctorAccountDTO.getAddress());
         doctor.setSpecialty(doctorAccountDTO.getSpecialty());
+        doctor.setGender(doctorAccountDTO.getGender());
         doctorRepository.save(doctor);
         return doctor;
     }
@@ -43,6 +44,7 @@ public class DoctorService {
         doctor.setFullName(updateDoctorDTO.getFullName());
         doctor.setAddress(updateDoctorDTO.getAddress());
         doctor.setSpecialty(updateDoctorDTO.getSpecialty());
+        doctor.setGender(updateDoctorDTO.getGender());
         doctorRepository.save(doctor);
     }
 

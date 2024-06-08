@@ -60,8 +60,7 @@ public class DoctorController {
                 Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
                 Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
                 for(BillDetail billDetail : billDetails){
-                    Medicine medicine = medicineService.getMedicineByName(billDetail.getMedicineName());
-                    billDetailDTOS.add(new BillDetailDTO(billDetail,medicine));
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,billDetail.getMedicine()));
                 }
                 String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
                 String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";
@@ -78,6 +77,40 @@ public class DoctorController {
             System.out.println(e);
         }
         mav.setViewName("doctor-dashboard");
+        return mav;
+    }
+
+    @GetMapping("/bills-list")
+    public ModelAndView billList() {
+        ModelAndView mav = new ModelAndView();
+        try {
+            //get current logged user
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
+            mav.addObject("user", myUser);
+            mav.addObject("active", "bills");
+            mav.addObject("header", "header.html");
+            mav.addObject("sidebar", "sidebar.html");
+
+            List<Bill> bills = billService.getAllBillsByDoctorId(myUser.getDoctor().getId());
+            List<BillDisplayDTO> billDisplayDTOS = new ArrayList<>();
+            for(Bill bill : bills){
+                Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
+                Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
+                for(BillDetail billDetail : billDetails){
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,billDetail.getMedicine()));
+                }
+                String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
+                String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";
+                billDisplayDTOS.add(new BillDisplayDTO(bill, patientEmail, doctorEmail, billDetailDTOS));
+            }
+
+            mav.addObject("billDisplayDTOS", billDisplayDTOS);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        mav.setViewName("doctor-bills");
         return mav;
     }
 

@@ -6,6 +6,7 @@ public class UpdateDoctorDTO {
     private String address;
     private String specialty;
     private String email;
+    private String gender;
 
     public UpdateDoctorDTO(){
 
@@ -49,5 +50,13 @@ public class UpdateDoctorDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

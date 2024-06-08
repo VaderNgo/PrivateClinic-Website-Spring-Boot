@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Bills</title>
+    <script
+            src="https://kit.fontawesome.com/64d58efce2.js"
+            crossorigin="anonymous"
+    ></script>
+    <link rel="icon" th:href="@{/static/assets/img/favicon.ico}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/static/css/font_awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/custom.css}">
+</head>
+<body>
+<div class="main-wrapper">
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${header}" th:replace="${header} :: header(${user})"></div>
+        <div th:if="${sidebar}" th:replace="${sidebar} :: sidebar(${active},${user})"></div>
+        <div class="page-wrapper">
+            <div class="content">
+                <div class="col-12 col-md-6 col-lg-12 col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title d-inline-block">Bill Management</h4>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0">
+                                    <thead class="d-none">
+                                    <tr>
+                                        <th>Patient Name</th>
+                                        <th>Note</th>
+                                        <th>Status</th>
+                                        <th>Timing</th>
+                                        <th class="text-right">Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="bill, stat : ${billDisplayDTOS}"
+                                    >
+                                        <th scope="row" th:text="${stat.index + 1}"></th>
+                                        <td style="min-width: 200px;">
+                                            <h5 class="time-title p-0">Date</h5>
+                                            <p th:text="${bill.getDate()}"></p>
+                                        </td>
+                                        <td style="min-width: 200px; overflow: hidden">
+                                            <h5 class="time-title p-0">Total money</h5>
+                                            <p th:text="${bill.getBill().getTotalMoney() + ' $'}"></p>
+                                        </td>
+                                        <td>
+                                                <span style="font-size: 12px" th:text="${bill.getBill().getStatus()}" class="badge"
+                                                      th:classappend="${bill.getBill().getStatus() == 'Pending' ? 'bg-warning' :
+                                                (bill.getBill().getStatus() == 'Finished' ? 'bg-light' : (bill.getBill().getStatus() == 'Paid' ? 'bg-success' : 'bg-danger'))}"></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <a th:href="@{/doctor/bills(billId=${bill.getBill().getId()})}" class="btn btn-outline-primary take-btn">View</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidebar-overlay" data-reff=""></div>
+<script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/static/js/popper.min.js}"></script>
+<script th:src="@{/static/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/js/jquery.slimscroll.js}"></script>
+<script th:src="@{/static/js/select2.min.js}"></script>
+<script th:src="@{/static/js/moment.min.js}"></script>
+<script th:src="@{/static/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/static/js/app.js}"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@
             crossorigin="anonymous"
     ></script>
     <!-- Bootstrap CSS -->
+    <link rel="icon" th:href="@{/static/assets/img/favicon.ico}">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/static/css/boostrap.min.css}">
@@ -42,6 +43,16 @@
         Bad Credentials
     </div>
 </div>
+<div th:if="${message}" class="toast show slide-right-to-left" th:classappend="${message.messageType == 'success'} ? 'bg-success' : 'bg-danger'" style="position: absolute; bottom: 10px; right: 20px; z-index: 99">
+    <div class="toast-header">
+        <strong class="mr-auto" th:text="${message.messageType == 'success'} ? 'Success' : 'Error'"></strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body text-white" th:text="${message.message}">
+    </div>
+</div>
 <div class="container">
     <div class="forms-container">
         <div class="signin-signup">
@@ -62,11 +73,15 @@
                 <h2 class="title">Sign up</h2>
                 <div class="input-field">
                     <i class="fas fa-user"></i>
-                    <input type="text"  placeholder="Username" required/>
+                    <input type="text"  placeholder="Name" required/>
                 </div>
                 <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text"  placeholder="Name" required/>
+                    <i class="fas fa-venus-mars"></i>
+                    <select>
+                        <option value="" selected disabled hidden>Choose here</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
                 </div>
                 <div class="input-field">
                     <i class="fas fa-address-book"></i>
@@ -79,6 +94,10 @@
                 <div class="input-field">
                     <i class="fas fa-envelope"></i>
                     <input type="email"   placeholder="Email" required />
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text"  placeholder="Username" required/>
                 </div>
                 <div class="input-field">
                     <i class="fas fa-lock"></i>

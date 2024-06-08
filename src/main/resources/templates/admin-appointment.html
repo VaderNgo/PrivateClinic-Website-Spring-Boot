@@ -3,7 +3,9 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Appointments</title>
+    <link rel="icon" th:href="@{/static/assets/img/favicon.ico}">
+
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
@@ -222,7 +224,8 @@
                     <div class="mb-3">
                         <label for="modalDoctor" class="form-label">Doctor</label>
                         <select class="form-control" id="modalDoctor">
-                            <option th:each="doctor,stat : ${session.doctors}" th:value="*{doctor.id}" th:text="*{doctor.fullName}" th:selected="${stat.index == 0}"></option>
+                            <option value="" selected disabled hidden>Choose here</option>
+                            <option th:each="doctor,stat : ${session.doctors}" th:value="*{doctor.id}" th:text="*{doctor.fullName}"></option>
                         </select>
                     </div>
                 </form>

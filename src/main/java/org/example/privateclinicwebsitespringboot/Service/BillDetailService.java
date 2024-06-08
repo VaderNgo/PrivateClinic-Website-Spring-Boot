@@ -17,7 +17,7 @@ public class BillDetailService {
 
     public BillDetail createBillDetail(String medicineName, Integer quantity, Medicine medicine, Bill bill){
         BillDetail billDetail = new BillDetail();
-        billDetail.setMedicineName(medicineName);
+        billDetail.setMedicine(medicine);
         billDetail.setQuantity(quantity);
         billDetail.setPrice(medicine.getPricePerUnit() * quantity);
         billDetail.setBill(bill);

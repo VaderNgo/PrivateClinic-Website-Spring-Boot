@@ -59,8 +59,7 @@ public class MyUserController {
                 Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
                 Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
                 for(BillDetail billDetail : billDetails){
-                    Medicine medicine = medicineService.getMedicineByName(billDetail.getMedicineName());
-                    billDetailDTOS.add(new BillDetailDTO(billDetail,medicine));
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,billDetail.getMedicine()));
                 }
                 String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
                 String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";
@@ -126,7 +125,7 @@ public class MyUserController {
             messageHandler = new MessageHandler("danger","Failed to add appointment");
         }
         mav.addObject("message",messageHandler);
-        mav.setViewName("redirect:/user/appointments");
+        mav.setViewName("redirect:/user/appointments?added");
         return mav;
     }
     @GetMapping("/bills")
@@ -146,8 +145,7 @@ public class MyUserController {
                 Set<BillDetailDTO> billDetailDTOS = new HashSet<>();
                 Set<BillDetail> billDetails = billDetailService.getBillDetailByBillId(bill.getId());
                 for(BillDetail billDetail : billDetails){
-                    Medicine medicine = medicineService.getMedicineByName(billDetail.getMedicineName());
-                    billDetailDTOS.add(new BillDetailDTO(billDetail,medicine));
+                    billDetailDTOS.add(new BillDetailDTO(billDetail,billDetail.getMedicine()));
                 }
                 String patientEmail = myUserService.findEmailByPatientId(bill.getPatient().getId()).isPresent() ? myUserService.findEmailByPatientId(bill.getPatient().getId()).get() : "";
                 String doctorEmail = myUserService.findEmailByDoctorId(bill.getDoctor().getId()).isPresent() ? myUserService.findEmailByDoctorId(bill.getDoctor().getId()).get() : "";

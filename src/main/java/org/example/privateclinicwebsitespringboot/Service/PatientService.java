@@ -27,6 +27,7 @@ public class PatientService {
             patient.setFullName(signUpDTO.getFullName());
             patient.setBirth(signUpDTO.getBirth());
             patient.setAddress(signUpDTO.getAddress());
+            patient.setGender(signUpDTO.getGender());
             patientRepository.save(patient);
             return patient;
         }

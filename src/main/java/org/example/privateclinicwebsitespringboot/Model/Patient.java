@@ -17,6 +17,7 @@ public class Patient {
     private String fullName;
     private Date birth;
     private String address;
+    private String gender;
     @CreatedDate
     private LocalDate createdAt = LocalDate.now();
     public Patient(){}
@@ -51,5 +52,21 @@ public class Patient {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 }
