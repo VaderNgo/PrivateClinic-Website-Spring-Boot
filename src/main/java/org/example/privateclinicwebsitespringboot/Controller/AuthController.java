@@ -2,6 +2,7 @@ package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.privateclinicwebsitespringboot.DTO.SignUpDTO;
+import org.example.privateclinicwebsitespringboot.Handler.MessageHandler;
 import org.example.privateclinicwebsitespringboot.Model.MyUser;
 import org.example.privateclinicwebsitespringboot.Model.Patient;
 import org.example.privateclinicwebsitespringboot.Service.MyUserService;
@@ -41,14 +42,23 @@ public class AuthController {
     @GetMapping("/signin")
     public ModelAndView signInPage(){
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("signin");
+        try{
+            mav.setViewName("signin");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return mav;
     }
 
     @GetMapping("/signup")
     public ModelAndView signUpPage(@ModelAttribute SignUpDTO signUpDTO){
         ModelAndView mav = new ModelAndView();
-        mav.addObject("signUpDTO",signUpDTO);
+        try{
+            mav.addObject("signUpDTO",signUpDTO);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         mav.setViewName("signup");
         return mav;
     }
@@ -57,10 +67,19 @@ public class AuthController {
     public ModelAndView signUpProcess(@ModelAttribute("signUpDTO") SignUpDTO signUpDTO, HttpSession session, RedirectAttributes redirectAttributes){
 
         ModelAndView mav = new ModelAndView();
-        mav.addObject("signUpDTO",signUpDTO);
-        Patient patient = patientService.createPatient(signUpDTO);
-        MyUser myUser = myUserService.signUpPatient(signUpDTO,passwordEncoder,patient);
-        mav.setViewName("redirect:/signin");
+        MessageHandler messageHandler = null;
+        try{
+            Patient patient = patientService.createPatient(signUpDTO);
+            MyUser myUser = myUserService.signUpPatient(signUpDTO,passwordEncoder,patient);
+            messageHandler = new MessageHandler("success","Sign Up Successful");
+            redirectAttributes.addFlashAttribute("message",messageHandler);
+            mav.setViewName("redirect:/signin");
+        }
+        catch(Exception e){
+            messageHandler = new MessageHandler("danger",e.getMessage());
+            redirectAttributes.addFlashAttribute("message",messageHandler);
+            mav.setViewName("redirect:/signup");
+        }
         return mav;
     }
 }

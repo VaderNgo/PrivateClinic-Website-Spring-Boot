@@ -13,13 +13,27 @@ import java.util.List;
 public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private MyUserService myUserService;
     public Patient createPatient(SignUpDTO signUpDTO){
-        Patient patient = new Patient();
-        patient.setFullName(signUpDTO.getFullName());
-        patient.setBirth(signUpDTO.getBirth());
-        patient.setAddress(signUpDTO.getAddress());
-        patientRepository.save(patient);
-        return patient;
+        try{
+            if(myUserService.findUserExistedByEmail(signUpDTO.getEmail()).isPresent()){
+                throw new Exception("Email already existed");
+            }
+            else if(myUserService.findUserExistedByUserName(signUpDTO.getUsername()).isPresent()){
+                throw new Exception("Username already existed");
+            }
+            Patient patient = new Patient();
+            patient.setFullName(signUpDTO.getFullName());
+            patient.setBirth(signUpDTO.getBirth());
+            patient.setAddress(signUpDTO.getAddress());
+            patientRepository.save(patient);
+            return patient;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public int countPatient(){

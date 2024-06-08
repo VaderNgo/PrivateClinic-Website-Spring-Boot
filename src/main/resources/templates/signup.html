@@ -12,9 +12,32 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/static/css/signin.css}">
+    <style>
+        @keyframes slideRightToLeft {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .toast.show.slide-right-to-left {
+            animation: slideRightToLeft 0.5s ease forwards;
+        }
+    </style>
 </head>
 <body>
-
+<div th:if="${message}" class="toast show slide-right-to-left" th:classappend="${message.messageType == 'success'} ? 'bg-success' : 'bg-danger'" style="position: absolute; bottom: 10px; right: 20px; z-index: 99">
+    <div class="toast-header">
+        <strong class="mr-auto" th:text="${message.messageType == 'success'} ? 'Success' : 'Error'"></strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body text-white" th:text="${message.message}">
+    </div>
+</div>
 <div class="container sign-up-mode">
     <div class="forms-container">
         <div class="signin-signup">
@@ -68,8 +91,7 @@
             <div class="content">
                 <h3>New here ?</h3>
                 <p>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-                    ex ratione. Aliquid!
+                    Join us and get the best service for your health
                 </p>
                 <button class="btn transparent" id="sign-up-btn">
                     Sign up
@@ -81,8 +103,7 @@
             <div class="content">
                 <h3>One of us ?</h3>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-                    laboriosam ad deleniti.
+                    If you already have an account, just sign in. We've missed you!
                 </p>
                 <button class="btn transparent" id="sign-in-btn">
                     Sign in
@@ -97,5 +118,26 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Custom JS -->
 <script th:src="@{/static/js/signup.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var cardBody = document.querySelector('.card-body');
+        cardBody.classList.add('slide-in');
+    });
+
+    var closeButtons = document.querySelectorAll('[data-dismiss="toast"]');
+
+    // Lặp qua từng nút đóng toast và thêm sự kiện click
+    closeButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Tìm phần tử cha của nút đóng toast
+            var toast = this.closest('.toast');
+            // Nếu tìm thấy, ẩn toast
+            if (toast) {
+                var bsToast = new bootstrap.Toast(toast);
+                bsToast.hide();
+            }
+        });
+    });
+</script>
 </body>
 </html>
