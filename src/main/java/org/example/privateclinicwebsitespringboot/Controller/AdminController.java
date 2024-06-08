@@ -2,6 +2,7 @@ package org.example.privateclinicwebsitespringboot.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.privateclinicwebsitespringboot.DTO.*;
+import org.example.privateclinicwebsitespringboot.Handler.MessageHandler;
 import org.example.privateclinicwebsitespringboot.Model.*;
 import org.example.privateclinicwebsitespringboot.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
@@ -63,7 +65,7 @@ public class AdminController {
     }
 
     @GetMapping("/appointments")
-    public ModelAndView appointment(HttpSession session) {
+    public ModelAndView appointment(HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -91,8 +93,9 @@ public class AdminController {
     }
 
     @PostMapping("/appointments/accept")
-    public ModelAndView acceptAppointment(@RequestParam("appointmentId") Long appointmentId, @RequestParam("doctorId") Long doctorId, HttpSession session) {
+    public ModelAndView acceptAppointment(@RequestParam("appointmentId") Long appointmentId, @RequestParam("doctorId") Long doctorId, HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -102,16 +105,20 @@ public class AdminController {
             mav.addObject("sidebar", "sidebar.html");
             Doctor doctor = doctorService.getDoctorById(doctorId);
             appointmentService.acceptAppointment(appointmentId, doctor);
+            messageHandler = new MessageHandler("success", "Appointment accepted successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to accept appointment");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/appointments");
         return mav;
     }
 
     @PostMapping("/appointments/deny")
-    public ModelAndView rejectAppointment(@RequestParam("appointmentId") Long appointmentId, HttpSession session) {
+    public ModelAndView rejectAppointment(@RequestParam("appointmentId") Long appointmentId, HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -120,15 +127,18 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
             appointmentService.denyAppointment(appointmentId);
+            messageHandler = new MessageHandler("success", "Appointment denied successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to deny appointment");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/appointments");
         return mav;
     }
 
     @GetMapping("/doctors")
-    public ModelAndView doctor(@ModelAttribute("DoctorAccountDTO") DoctorAccountDTO doctorAccountDTO, HttpSession session) {
+    public ModelAndView doctor(@ModelAttribute("DoctorAccountDTO") DoctorAccountDTO doctorAccountDTO, HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -154,8 +164,9 @@ public class AdminController {
     }
 
     @PostMapping("/doctors/add")
-    public ModelAndView addDoctor(@ModelAttribute("DoctorAccountDTO") DoctorAccountDTO doctorAccountDTO, HttpSession session) {
+    public ModelAndView addDoctor(@ModelAttribute("DoctorAccountDTO") DoctorAccountDTO doctorAccountDTO, HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -166,9 +177,12 @@ public class AdminController {
             mav.addObject("doctorAccountDTO", doctorAccountDTO);
             Doctor doctor = doctorService.createDoctor(doctorAccountDTO);
             myUserService.signUpDoctor(doctorAccountDTO, passwordEncoder, doctor);
+            messageHandler = new MessageHandler("success", "Doctor added successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to add doctor");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/doctors");
         return mav;
     }
@@ -196,8 +210,9 @@ public class AdminController {
     }
 
     @PostMapping("/medicines/add")
-    public ModelAndView addMedicine(@ModelAttribute("Medicine") Medicine medicine) {
+    public ModelAndView addMedicine(@ModelAttribute("Medicine") Medicine medicine,HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -206,16 +221,20 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
             medicineService.addMedicine(medicine);
+            messageHandler = new MessageHandler("success", "Medicine added successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to add medicine");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/medicines");
         return mav;
     }
 
     @PostMapping("/medicines/delete")
-    public ModelAndView deleteMedicine(@RequestParam("medicineId") Long medicineId) {
+    public ModelAndView deleteMedicine(@RequestParam("medicineId") Long medicineId,HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -224,21 +243,28 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
             medicineService.deleteMedicine(medicineId);
+            messageHandler = new MessageHandler("success", "Medicine deleted successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to delete medicine");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/medicines");
         return mav;
     }
 
     @PostMapping("/medicines/update")
-    public ModelAndView updateMedicine(@ModelAttribute("UpdateMedicineDTO") UpdateMedicineDTO updateMedicineDTO) {
+    public ModelAndView updateMedicine(@ModelAttribute("UpdateMedicineDTO") UpdateMedicineDTO updateMedicineDTO,HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             medicineService.updateMedicine(updateMedicineDTO);
+            messageHandler = new MessageHandler("success", "Medicine updated successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to update medicine");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/medicines");
         return mav;
     }
@@ -278,8 +304,9 @@ public class AdminController {
     }
 
     @PostMapping("/bills/delete")
-    public ModelAndView adminBillsDelete(@RequestParam("billId") Long billId) {
+    public ModelAndView adminBillsDelete(@RequestParam("billId") Long billId,HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -288,16 +315,20 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
             billService.deleteBillById(billId);
+            messageHandler = new MessageHandler("success", "Bill deleted successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to delete bill");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/bills");
         return mav;
     }
 
     @PostMapping("/bills/send")
-    public ModelAndView adminBillsSend(@RequestParam("billId") Long billId) {
+    public ModelAndView adminBillsSend(@RequestParam("billId") Long billId,HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -306,15 +337,18 @@ public class AdminController {
             mav.addObject("header", "header.html");
             mav.addObject("sidebar", "sidebar.html");
             billService.sendBillToUser(billId);
+            messageHandler = new MessageHandler("success", "Bill sent successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to send bill");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/bills");
         return mav;
     }
 
     @GetMapping("/patients")
-    public ModelAndView adminPatients() {
+    public ModelAndView adminPatients(HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -358,27 +392,35 @@ public class AdminController {
     }
 
     @PostMapping("/patients/update")
-    public ModelAndView adminPatientsUpdate(@ModelAttribute("UpdatePatientDTO") UpdatePatientDTO updatePatientDTO) {
+    public ModelAndView adminPatientsUpdate(@ModelAttribute("UpdatePatientDTO") UpdatePatientDTO updatePatientDTO,HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             patientService.updatePatient(updatePatientDTO);
             myUserService.updateEmailForPatient(updatePatientDTO.getEmail(), updatePatientDTO.getId());
+            messageHandler = new MessageHandler("success", "Patient updated successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to update patient");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/patients");
         return mav;
     }
 
     @PostMapping("/doctors/update")
-    public ModelAndView adminDoctorsUpdate(@ModelAttribute("UpdateDoctorDTO") UpdateDoctorDTO updateDoctorDTO) {
+    public ModelAndView adminDoctorsUpdate(@ModelAttribute("UpdateDoctorDTO") UpdateDoctorDTO updateDoctorDTO,HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             doctorService.updateDoctor(updateDoctorDTO);
             myUserService.updateEmailForDoctor(updateDoctorDTO.getEmail(), updateDoctorDTO.getId());
+            messageHandler = new MessageHandler("success", "Doctor updated successfully");
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to update doctor");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/admin/doctors");
         return mav;
     }
@@ -387,6 +429,7 @@ public class AdminController {
     public ModelAndView adminDoctorsDelete(@RequestParam("doctorId") Long doctorId) {
         ModelAndView mav = new ModelAndView();
         try {
+            myUserService.deleteMyUserByDoctorId(doctorId);
             doctorService.deleteDoctor(doctorId);
         } catch (Exception e) {
             System.out.println(e);

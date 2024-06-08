@@ -5,6 +5,7 @@ import org.example.privateclinicwebsitespringboot.DTO.BillDTO;
 import org.example.privateclinicwebsitespringboot.DTO.BillDetailDTO;
 import org.example.privateclinicwebsitespringboot.DTO.BillDisplayDTO;
 import org.example.privateclinicwebsitespringboot.DTO.DisplayAppointmentDTO;
+import org.example.privateclinicwebsitespringboot.Handler.MessageHandler;
 import org.example.privateclinicwebsitespringboot.Model.*;
 import org.example.privateclinicwebsitespringboot.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -80,7 +82,7 @@ public class DoctorController {
     }
 
     @GetMapping("/appointments")
-    public ModelAndView appointment(HttpSession session) {
+    public ModelAndView appointment(HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -102,8 +104,9 @@ public class DoctorController {
     }
 
     @PostMapping("/bills/redirect")
-    public ModelAndView viewAppointmentBill(@RequestParam("appointmentId") Long appointmentId, HttpSession session) {
+    public ModelAndView viewAppointmentBill(@RequestParam("appointmentId") Long appointmentId, HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -113,15 +116,17 @@ public class DoctorController {
             mav.addObject("sidebar", "sidebar.html");
 
             var bill = billService.getBillByAppointmentId(appointmentId);
+            messageHandler = new MessageHandler("success", "Redirect to bill successfully");
             mav.setViewName("redirect:/doctor/bills?billId=" + bill.getId());
         } catch (Exception e) {
-            System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Redirect to bill failed");
+            mav.setViewName("redirect:/doctor/dashboard");
         }
         return mav;
     }
 
     @GetMapping("/bills")
-    public ModelAndView bill(@RequestParam("billId") Long billId, HttpSession session) {
+    public ModelAndView bill(@RequestParam("billId") Long billId, HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -144,8 +149,9 @@ public class DoctorController {
     }
 
     @PostMapping("/bills/add")
-    public ModelAndView addBill(@RequestParam("appointmentId") Long appointmentId, HttpSession session) {
+    public ModelAndView addBill(@RequestParam("appointmentId") Long appointmentId, HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -157,10 +163,15 @@ public class DoctorController {
             Appointment appointment = appointmentService.setFinishAppointment(appointmentId);
             Bill bill = billService.createBillForAppointment(appointment);
             Long billId = bill.getId();
+
+            messageHandler = new MessageHandler("success", "Bill added successfully");
             mav.setViewName("redirect:/doctor/bills?billId=" + billId);
         } catch (Exception e) {
             System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to add bill");
+            mav.setViewName("redirect:/doctor/dashboard");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         return mav;
     }
 
@@ -168,8 +179,9 @@ public class DoctorController {
     public ModelAndView updateBillDetails(@RequestParam("billId") Long billId,
                                           @RequestParam("medicine") List<String> medicines,
                                           @RequestParam("quantity") List<Integer> quantities,
-                                          HttpSession session) {
+                                          HttpSession session, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        MessageHandler messageHandler = null;
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MyUser myUser = myUserService.loadMyUserByUsername(auth.getName());
@@ -203,9 +215,12 @@ public class DoctorController {
             System.out.println("\nTotal money: " + bill.calculateTotalMoney());
             bill.setTotalMoney(bill.calculateTotalMoney());
             billService.updateTotalMoney(bill.calculateTotalMoney(),billId);
+            messageHandler = new MessageHandler("success", "Bill details updated successfully");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e);
+            messageHandler = new MessageHandler("danger", "Failed to update bill details");
         }
+        redirectAttributes.addFlashAttribute("message", messageHandler);
         mav.setViewName("redirect:/doctor/bills?billId=" + billId);
         return mav;
     }

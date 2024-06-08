@@ -15,6 +15,8 @@ public interface MyUserRepository extends JpaRepository <MyUser,Long>{
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
 
+    void deleteMyUserByDoctorId(Long doctorId);
+
     @Query("SELECT u.email FROM MyUser u WHERE u.patient.id = :patientId")
     Optional<String> findEmailByPatientId(Long patientId);
 

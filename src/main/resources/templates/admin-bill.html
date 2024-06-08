@@ -67,6 +67,16 @@
 </head>
 <body>
 <div class="main-wrapper">
+    <div th:if="${message}" class="toast show slide-right-to-left" th:classappend="${message.messageType == 'success'} ? 'bg-success' : 'bg-danger'" style="position: absolute; bottom: 10px; right: 20px; z-index: 99">
+        <div class="toast-header">
+            <strong class="mr-auto" th:text="${message.messageType == 'success'} ? 'Success' : 'Error'"></strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body text-white" th:text="${message.message}">
+        </div>
+    </div>
     <div sec:authorize="isAuthenticated()">
         <div th:if="${header}" th:replace="${header} :: header(${user})"></div>
         <div th:if="${sidebar}" th:replace="${sidebar} :: sidebar(${active},${user})"></div>
@@ -285,6 +295,27 @@
         var modal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
         modal.show();
     }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var cardBody = document.querySelector('.card-body');
+        cardBody.classList.add('slide-in');
+    });
+
+    var closeButtons = document.querySelectorAll('[data-dismiss="toast"]');
+
+    // Lặp qua từng nút đóng toast và thêm sự kiện click
+    closeButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Tìm phần tử cha của nút đóng toast
+            var toast = this.closest('.toast');
+            // Nếu tìm thấy, ẩn toast
+            if (toast) {
+                var bsToast = new bootstrap.Toast(toast);
+                bsToast.hide();
+            }
+        });
+    });
 </script>
 </body>
 </html>

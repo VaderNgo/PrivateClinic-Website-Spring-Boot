@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthController {
@@ -53,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup/process")
-    public ModelAndView signUpProcess(@ModelAttribute("signUpDTO") SignUpDTO signUpDTO, HttpSession session){
+    public ModelAndView signUpProcess(@ModelAttribute("signUpDTO") SignUpDTO signUpDTO, HttpSession session, RedirectAttributes redirectAttributes){
 
         ModelAndView mav = new ModelAndView();
         mav.addObject("signUpDTO",signUpDTO);

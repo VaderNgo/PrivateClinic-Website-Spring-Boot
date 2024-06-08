@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -78,7 +79,7 @@ public class MyUserController {
     }
 
     @GetMapping("/appointments")
-    public ModelAndView appointment(@ModelAttribute Appointment appointment,HttpSession session){
+    public ModelAndView appointment(@ModelAttribute Appointment appointment,HttpSession session, RedirectAttributes redirectAttributes){
         ModelAndView mav = new ModelAndView();
         try{
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -99,7 +100,7 @@ public class MyUserController {
     }
 
     @PostMapping("/appointments/add")
-    public ModelAndView addAppointment(@ModelAttribute("appointmentDTO") AppointmentDTO appointmentDTO, HttpSession session){
+    public ModelAndView addAppointment(@ModelAttribute("appointmentDTO") AppointmentDTO appointmentDTO, HttpSession session, RedirectAttributes redirectAttributes){
         ModelAndView mav = new ModelAndView();
         MessageHandler messageHandler = null;
         try{
@@ -113,7 +114,7 @@ public class MyUserController {
             mav.addObject("appointmentDTO",appointmentDTO);
             if(!appointmentService.isDateNotPicked(appointmentDTO)){
                 messageHandler = new MessageHandler("danger","This date already picked!");
-                session.setAttribute("message",messageHandler);
+                redirectAttributes.addFlashAttribute("message",messageHandler);
                 mav.setViewName("redirect:/user/appointments");
                 return mav;
             }
@@ -124,7 +125,7 @@ public class MyUserController {
             System.out.println(e);
             messageHandler = new MessageHandler("danger","Failed to add appointment");
         }
-        session.setAttribute("message",messageHandler);
+        mav.addObject("message",messageHandler);
         mav.setViewName("redirect:/user/appointments");
         return mav;
     }

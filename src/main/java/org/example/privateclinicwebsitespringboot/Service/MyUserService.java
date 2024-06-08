@@ -94,7 +94,9 @@ public class MyUserService implements UserDetailsService {
         myUserRepository.save(myUser);
     }
 
-
+    public void deleteMyUserByDoctorId(Long doctorId){
+        myUserRepository.deleteMyUserByDoctorId(doctorId);
+    }
     public MyUser findByEmail(String email){
         return myUserRepository.getMyUserByEmail(email);
     }
