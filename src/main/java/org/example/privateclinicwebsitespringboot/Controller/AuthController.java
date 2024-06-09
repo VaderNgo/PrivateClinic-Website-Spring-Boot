@@ -34,8 +34,8 @@ public class AuthController {
     @GetMapping("/index")
     public ModelAndView homePage(){
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("index");
-        mav.addObject("content","sidebar");
+        mav.setViewName("redirect:/signin");
+
         return mav;
     }
 

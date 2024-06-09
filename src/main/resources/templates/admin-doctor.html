@@ -193,6 +193,14 @@
                         <label for="updateDoctorEmail">Email</label>
                         <input type="email" class="form-control" id="updateDoctorEmail" th:field="*{email}" name="email" required>
                     </div>
+                    <div class="form-group">
+                        <label for="doctorGenderUpdate">Gender</label>
+                        <select class="form-control" id="doctorGenderUpdate" th:field="*{gender}">
+                            <option value="" selected disabled hidden>Choose here</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
 
                     <div class="form-group">
                         <label for="updateDoctorSpecialty">Specialty</label>

@@ -21,7 +21,7 @@ public class BillDetail {
     @JoinColumn(name="bill_id", nullable=true)
     private Bill bill;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = true)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "medicine_id",nullable = true)
     private Medicine medicine;
 
