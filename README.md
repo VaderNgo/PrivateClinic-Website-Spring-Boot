@@ -10,6 +10,7 @@
 
 <p align="center">
   <img src="img/login-screen.png" alt="login-screen">
+  <img src="img/admin-screen.png" alt="admin-screen">
 </p>
 
 <h2>🏥 Description</h2>
