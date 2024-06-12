@@ -31,7 +31,7 @@ public class AuthController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping("/index")
+    @GetMapping("/")
     public ModelAndView homePage(){
         ModelAndView mav = new ModelAndView();
         mav.setViewName("redirect:/signin");
