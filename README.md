@@ -30,7 +30,7 @@
 <h2>🛠 Technologies Used</h2>
 <ul>
   <li><strong>Backend:</strong> Spring Boot <img src="https://img.shields.io/badge/-Spring%20Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white" alt="Spring Boot"></li>
-  <li><strong>Frontend:</strong> Thymeleaf (or any suitable frontend framework) <img src="https://img.shields.io/badge/-Thymeleaf-005F0F?style=flat-square&logo=thymeleaf&logoColor=white" alt="Thymeleaf"></li>
+  <li><strong>Frontend:</strong> Thymeleaf And Bootstrap 4.2<img src="https://img.shields.io/badge/-Thymeleaf-005F0F?style=flat-square&logo=thymeleaf&logoColor=white" alt="Thymeleaf"></li>
   <li><strong>Database:</strong> MySQL <img src="https://img.shields.io/badge/-MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL"></li>
   <li><strong>Cloud Database:</strong> Azure SQL Database <img src="https://img.shields.io/badge/-Azure%20SQL%20Database-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white" alt="Azure SQL Database"></li>
   <li><strong>Hosting:</strong> Render <img src="https://img.shields.io/badge/-Render-46E3B7?style=flat-square&logo=render&logoColor=white" alt="Render"></li>
