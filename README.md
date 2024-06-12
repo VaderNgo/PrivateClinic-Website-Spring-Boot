@@ -9,8 +9,7 @@
 </p>
 
 <p align="center">
-  <img style="width: 500px; height: 300px" src="img/login-screen.png" alt="login-screen">
-  <img  style="width: 500px; height: 300px" src="img/admin-screen.png" alt="admin-screen">
+  <img src="img/login-screen.png" alt="login-screen">
 </p>
 
 <h2>🏥 Description</h2>
