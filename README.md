@@ -8,6 +8,11 @@
   <img src="https://img.shields.io/badge/License-MIT-yellowgreen" alt="License">
 </p>
 
+<p align="center">
+  <img style="width: 500px; height: 300px" src="img/login-screen.png" alt="login-screen">
+  <img  style="width: 500px; height: 300px" src="img/admin-screen.png" alt="admin-screen">
+</p>
+
 <h2>🏥 Description</h2>
 <p>
   Private Clinic Web is a web application for managing a private clinic, developed using Spring Boot and following the MVC (Model-View-Controller) design pattern. This application allows users to manage patient information, appointments, medical records, and various medical services. A MySQL database is used for data storage and is deployed on Azure SQL Database cloud. The application is hosted on Render to ensure scalability and high availability.
